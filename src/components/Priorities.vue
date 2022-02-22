@@ -1,66 +1,45 @@
 <template>
   <div class="wrapper">
-    <div class="priorities" ref="priorities">
+    <div class="priorities">
 
       <div class="settings" :class="{ isClosedSettings }">
         <Icon type="settings" @click="isClosedSettings = !isClosedSettings"/>
         <Icon :type="themeIcon" @click="$emit('switchTheme', 'main')"/>
         <Icon type="heart" @click="$emit('switchTheme', 'special')"/>
         <Icon type="globe" @click="$emit('switchLang')"/>
-        <!-- <Icon type="help-circle"/> -->
       </div>
 
-      <div class="priorities__buttons">
-        <div class="priorities__button" @click="swiperPage = !swiperPage">
-          <Icon :type="swiperPage ? 'chevrons-left' : 'chevrons-right'"/>
-        </div>
-        <div class="priorities__button">
-          <Icon type="clock"/>
-        </div>
-        <div class="priorities__button priorities__button-special">
+      <div class="priorities__buttons" style="grid-template-columns: 2fr 1fr;">
+        <div 
+          class="priorities__button"
+          v-text="isModeEditor ? 'История' : 'Редактор'"
+          @click="isModeEditor = !isModeEditor"
+        />
+        <div 
+          class="priorities__button priorities__button-special"
+          :disabled="!isModeEditor"
+        >
           <Icon type="send"/>
         </div>
       </div>
 
-      <div class="priorities__list">
-        <div class="content__wrapper" :style="{ height: textareaHeight }">
-          <form 
-            @submit.prevent="addPriority" 
-            :style="{ height: textareaHeight }"
-            defaultfocus="textarea"
-          >
-            <textarea 
-              v-model="value"
-              ref="textarea"
-              id="textarea"
-              :rows="textareaRows"
-              :placeholder="swiperPage ? 'Ваш вопрос' : 'Ваш приоритет'"
-              @keydown.enter="textareaKeyDownEnter"
-            />
-            <button type="submit"><Icon type="plus"/></button>
-          </form>
-        </div>
-        <div class="abccba" :class="{ next: swiperPage }">
-          <div class="wrapper__priorities">
-            <Swiper ref="swiper" @activeIndexChange="swiperPage = $event.activeIndex">
-              <SwiperSlide>
-                <QuestionsList
-                  :questions="questions"
-                  @remove="questions.splice($event, 1)"
-                  @edit="editPriority(questions, $event)"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <PrioritiesList
-                  :priorities="priorities"
-                  @remove="priorities.splice($event, 1)"
-                  @edit="editPriority(priorities, $event)"
-                />
-              </SwiperSlide>
-            </Swiper>
-          </div>
-        </div>
-      </div>
+      <Priorities_ModeEditor
+        ref="modeEditor"
+        v-show="isModeEditor"
+        :appWidth="appWidth"
+        :bodyWidth="bodyWidth"
+        :bodyHeight="bodyHeight"
+        :isDesktop="bodyWidth >= 768"
+        :isShow="isModeEditor"
+      />
+      <Priorities_ModeHistory
+        ref="modeHistory"
+        v-if="!isModeEditor"
+        :appWidth="appWidth"
+        :bodyWidth="bodyWidth"
+        :bodyHeight="bodyHeight"
+        :isDesktop="bodyWidth >= 768"
+      />
 
       <div class="resize_button" @mousedown.prevent="startResize"/>
     </div>
@@ -70,108 +49,45 @@
 
 <script>
 import Icon from './Icon';
-import { Swiper, SwiperSlide } from 'swiper-vue2';
-
-import PrioritiesList from './PrioritiesList';
-import QuestionsList from './QuestionsList';
+import Priorities_ModeEditor from './Priorities_ModeEditor.vue';
+import Priorities_ModeHistory from './Priorities_ModeHistory.vue';
 
 export default {
   name: 'Priorities',
 
   components: {
-    PrioritiesList,
-    QuestionsList,
-    Swiper,
-    SwiperSlide,
     Icon,
+    Priorities_ModeEditor,
+    Priorities_ModeHistory,
   },
 
   props: {
     themeIcon: String,
     minisLang: String,
-    maxWidth: Number,
+    appWidth: Number,
     bodyWidth: Number,
+    bodyHeight: Number,
   },
 
   data: () => ({
-    console,
-    value: '',
-    priorities: ['Что важнее прямо сейчас?'],
-    questions: [
-      'Что важнее прямо сейчас?',
-      'Что больше хочется?',
-      'Чего быстрее добиться?'
-    ],
-    swiperPage: 0,
-    textareaRows: 1,
-    mode: 'priorities',
+    isModeEditor: true,
     isClosedSettings: true,
     isResize: false,
     startX: null,
   }),
 
-  watch: {
-    value: 'setMaxTextareaRows',
-    maxWidth: ['setMaxTextareaRows', 'setSwiperSize'],
-    bodyWidth: ['setMaxTextareaRows', 'setSwiperSize'],
-    swiperPage(swiperPage) {
-      const size = (this.bodyWidth < 768 ? this.bodyWidth : this.maxWidth) - 40;
-      const [swiper] = document.getElementsByClassName('swiper-wrapper');
-      swiper.style.setProperty('transition', `transform .25s`);
-      swiper.style.setProperty('transform', `translate3d(-${ swiperPage * size }px, 0px, 0px)`);
-    }
-  },
-
-  computed: {
-    textareaHeight() {
-      const rows = `${ this.textareaRows }em`;
-      const lineHeight = `${ this.textareaRows * 0.2 }em`;
-      return `calc(${ rows } + ${ lineHeight } + 30px)`;
-    },
-  },
-
   methods: {
-    setSwiperSize() {
-      const size = (this.bodyWidth < 768 ? this.bodyWidth : this.maxWidth) - 40;
-      const [swiper] = document.getElementsByClassName('swiper-wrapper');
-      const slides = document.getElementsByClassName('swiper-slide');
-      swiper.style.setProperty('max-width', `${ size }px`);
-      swiper.style.setProperty('display', `grid`);
-      swiper.style.setProperty('grid-auto-flow', `column`);
-      swiper.style.setProperty('transform', `translate3d(-${ this.swiperPage * size }px, 0px, 0px)`);
-      [].forEach.call(slides, slide => {
-        slide.style.setProperty('width', `${ size }px`);
-      });
-      const { snapGrid } = this.$refs.swiper.swiperRef;
-      this.$refs.swiper.swiperRef.snapGrid = snapGrid.map((_, index) => index * size);
-    },
-    setMaxTextareaRows() {
-      this.textareaRows = 1;
-      this.$nextTick(() => {
-        const { scrollHeight } = this.$refs.textarea;
-        const newTextareaRows = Math.ceil((scrollHeight - 28)/19);
-        if(newTextareaRows > 5) this.value = this.value.slice(0, -1);
-        this.textareaRows = Math.min(5, newTextareaRows);
-      })
-    },
-
-    editPriority(array, index) {
-      this.value = array[index];
-      array.splice(index, 1);
-      this.$refs.textarea.focus();
-    },
-
-    setMaxWidth({ pageX }) {
+    setAppWidth({ pageX }) {
       requestAnimationFrame(() => {
-        const maxWidth = pageX - this.startResizeX + this.startResizeWidth;
-        this.$emit('changeMaxWidth', maxWidth);
+        const appWidth = pageX - this.startResizeX + this.startResizeWidth;
+        this.$emit('changeAppWidth', appWidth);
       })
     },
 
     startResize(event) {
       this.startResizeX = event.pageX;
-      this.startResizeWidth = this.maxWidth;
-      document.addEventListener('mousemove', this.setMaxWidth);
+      this.startResizeWidth = this.appWidth;
+      document.addEventListener('mousemove', this.setAppWidth);
       document.addEventListener('mouseup', this.stopResize);
       window.addEventListener('mouseleave', this.stopResize);
     },
@@ -179,22 +95,9 @@ export default {
     stopResize() {
       this.startResizeX = null;
       this.startResizeWidth = null;
-      document.removeEventListener('mousemove', this.setMaxWidth);
+      document.removeEventListener('mousemove', this.setAppWidth);
       document.removeEventListener('mouseup', this.stopResize);
       window.removeEventListener('mouseleave', this.stopResize);
-    },
-
-    textareaKeyDownEnter(event) {
-      if(event.shiftKey) return;
-      event.preventDefault();
-      this.addPriority();
-    },
-
-    addPriority(event) {
-      if(this.value.replace(/\n/g, '')) {
-        this.priorities.push(this.value.trim());
-      };
-      this.value = '';
     },
 
     keydown({ key, shiftKey }) {
@@ -202,16 +105,18 @@ export default {
         case 'Escape':
           this.isClosedSettings = !this.isClosedSettings;
           break;
+        // case 'ArrowLeft':
+        //   this.swiperPage = 0;
+        //   break;
+        // case 'ArrowRight':
+        //   this.swiperPage = 1;
+        //   break;
       }
     },
   },
 
   beforeMount() {
     document.addEventListener('keydown', this.keydown);
-  },
-
-  mounted() {
-    this.setSwiperSize();
   },
 
   beforeDestroy() {
@@ -221,12 +126,6 @@ export default {
 </script>
 
 <style lang="scss">
-.swiper-container, 
-.swiper-wrapper, 
-.swiper-slide {
-  height: 100% !important;
-}
-
 .wrapper {
   width: 100%;
   height: 100%;
@@ -306,118 +205,15 @@ export default {
         position: relative;
         background-color: var(--content-bg-color);
         user-select: none; 
-        &:hover {
-          opacity: .8;
-        }
+        &:hover { opacity: .8;}
         &-special {
           background-color: var(--special-color);
           color: #F3F3F3;
         }
-      }
-    }
-
-    &__list {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      position: relative;
-      box-sizing: border-box;
-      z-index: 2;
-      background-color: var(--content-bg-color);
-      border-radius: 10px;
-      .content__wrapper {
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-        background: var(--main-bg-color);
-        border-radius: 10px;
-        form {
-          width: 100%;
-          height: 100%;
-          position: relative;
-          font-size: 14px;
-          border-radius: inherit;
-          textarea {
-            width: inherit;
-            resize: none;
-            margin: 0;
-            background: none;
-            border: none;
-            outline: none;
-            padding: 15px;
-            padding-right: 3em;
-            box-sizing: border-box;
-            border-radius: inherit;
-            color: var(--text-color);
-            font-size: inherit;
-            font-family: inherit;
-            line-height: 1.2;
-            &:not(:focus):hover {
-              outline: 1px solid var(--text-color);
-            }
-            &:focus {
-              outline: 1px solid var(--special-color);
-            }
-          }
-          button {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: calc(100% - 10px);
-            width: 30px;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            margin: 5px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: var(--special-color);
-            color: var(--text-color);
-            &:not(:focus):hover {
-              opacity: .5;
-            }
-            &:focus:not(:active) {
-              background: var(--content-bg-color);
-              outline: 1px solid var(--special-color);
-            }
-          }
-        }
-      }
-      .wrapper__priorities {
-        height: 100%;
-        box-sizing: border-box;
-        background: var(--main-bg-color);
-        border-radius: 10px;
-        position: relative;
-        overflow-x: hidden;
-        overflow-y: auto;
-
-        &::-webkit-scrollbar{
-          background: transparent;
-        }
-      }
-      .abccba {
-        border-radius: 10px; 
-        overflow: hidden; 
-        height: 100%;
-        &::after {
-          content: '';
-          position: absolute;
-          width: 10px;
-          height: 20px;
-          clip-path: polygon(0 0, 100% 50%, 0 100%);
-          background-color: var(--special-color);
-          top: calc(50% - 10px);
-        }
-        &:not(.next)::after {
-          left: calc(100% - 20px);
-        }
-        &.next::after {
-          right: calc(100% - 20px);
-          transform: scale(-1);
+        &[disabled] {
+          cursor: default;
+          color: var(--main-bg-color);
+          background-color: var(--content-bg-color);
         }
       }
     }
@@ -479,10 +275,6 @@ export default {
             transform: translateX(calc(-100% - 20px))
           }
         }
-      }
-
-      &__list {
-        padding-bottom: 30px;
       }
 
       .resize_button {

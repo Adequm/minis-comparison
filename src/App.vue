@@ -3,7 +3,7 @@
     class="container" 
     :style="{ 
       height: `${ innerHeight }px`, 
-      maxWidth: innerWidth < 768 ? '100vw' : `${ maxWidth }px`
+      maxWidth: innerWidth < 768 ? '100vw' : `${ appWidth }px`
     }"
   >
     <Icon 
@@ -16,11 +16,12 @@
       v-else
       :themeIcon="themeMain.icon"
       :minisLang="minisLang"
-      :maxWidth="maxWidth"
+      :appWidth="appWidth"
       :bodyWidth="innerWidth"
+      :bodyHeight="innerHeight"
       @switchTheme="switchTheme"
       @switchLang="switchLang"
-      @changeMaxWidth="changeContainerMaxWidth"
+      @changeAppWidth="changeContainerAppWidth"
     />
   </div>
 </template>
@@ -40,12 +41,12 @@ export default {
     console,
     innerHeight: null,
     innerWidth: null,
-    maxWidth: 300,
+    appWidth: 300,
   }),
 
   methods: {
-    changeContainerMaxWidth(val) {
-      this.maxWidth = Math.min(600, Math.max(val, 300));
+    changeContainerAppWidth(val) {
+      this.appWidth = Math.min(600, Math.max(val, 300));
     }
   },
 

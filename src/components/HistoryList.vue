@@ -1,17 +1,23 @@
 <template>
   <div class="wrapper__priorities_scroll">
 
-    <template v-if="priorities.length">
-      <div 
-        v-for="(priority, index) of priorities"
-        :key="`${priority}_${index}`"
-        class="priority"
+    <template v-if="history.length">
+      <div
+        v-for="(chunk, chunkIndex) of history"
+        :key="chunkIndex"
+        style="display: grid; gap: 10px; grid-auto-rows: min-content;"
       >
-        <span v-text="priority"/>
-        <div style="float: right">
-          <Icon type="edit" :strokeWidth="3" @click="$emit('edit', index)"/>
-          <Icon type="trash" :strokeWidth="3" @click="$emit('remove', index)"/>
-        </div>
+        <div 
+          class="priority" 
+          v-text="chunk.question"
+          style="background: var(--special-color); font-weight: bold; text-align: center;"
+        />
+        <div
+          v-for="(answer, answerIndex) of chunk.answers"
+          :key="answerIndex"
+          class="priority"
+          v-text="answer"
+        />
       </div>
     </template>
 
@@ -28,14 +34,14 @@
 import Icon from './Icon';
 
 export default {
-  name: 'PrioritiesList',
+  name: 'HistoryList',
 
   components: {
     Icon,
   },
 
   props: {
-    priorities: Array,
+    history: Array,
   },
 }
 </script>

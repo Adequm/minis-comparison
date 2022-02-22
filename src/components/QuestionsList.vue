@@ -44,6 +44,7 @@ export default {
 <style lang="scss">
 .wrapper__questions_scroll {
   padding: 10px;
+  padding-bottom: 0;
   font-size: 14px;
   box-sizing: border-box;
   overflow: auto;
@@ -52,9 +53,7 @@ export default {
   gap: 10px;
   background: var(--main-bg-color);
   border-radius: 10px;
-  // position: absolute;
   width: auto;
-  // transition: transform .5s;
 
   &.hide {
     transform: translateX(-100%);

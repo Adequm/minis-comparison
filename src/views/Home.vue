@@ -2,11 +2,12 @@
   <Priorities
     :themeIcon="themeIcon"
     :minisLang="minisLang"
-    :maxWidth="maxWidth"
+    :appWidth="appWidth"
     :bodyWidth="bodyWidth"
+    :bodyHeight="bodyHeight"
     @switchTheme="$emit('switchTheme', $event)"
     @switchLang="$emit('switchLang', $event)"
-    @changeMaxWidth="$emit('changeMaxWidth', $event)"
+    @changeAppWidth="$emit('changeAppWidth', $event)"
   />
 </template>
 
@@ -21,8 +22,9 @@ export default {
   },
 
   props: {
-    maxWidth: Number,
+    appWidth: Number,
     bodyWidth: Number,
+    bodyHeight: Number,
     minisLang: String,
     themeIcon: String,
   },
