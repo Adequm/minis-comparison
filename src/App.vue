@@ -10,6 +10,7 @@
 
     <div v-else class="minis__wrapper">
       <Settings
+        v-if="isDesktop"
         :themeIcon="themeMain.icon"
         v-model="isClosedSettings"
         @switchTheme="switchTheme"
@@ -20,6 +21,7 @@
         :appWidth="appWidth" 
         :bodyHeight="innerHeight"
         :isDesktop="isDesktop"
+        :minAppHeight="minAppHeight"
         @switchSettings="isClosedSettings = !isClosedSettings"
       />
 
@@ -52,6 +54,7 @@ export default {
     startResizeWidth: null,
     resizeHash: null,
     isClosedSettings: true,
+    minAppHeight: 560,
   }),
 
   computed: {
@@ -62,6 +65,12 @@ export default {
   watch: {
     appWidth: 'setResizeHash',
     innerHeight: 'setResizeHash',
+    isDesktop: {
+      immediate: true,
+      handler(isDesktop) {
+        this.minAppHeight = isDesktop ? 560 : innerHeight;
+      }
+    },
   },
 
   methods: {
@@ -205,7 +214,7 @@ body {
           width: 10px;
           height: 10px;
           background: var(--special-color);
-          bottom: 0;
+          transform: translateY(-100%);
           right: 0;
           z-index: 6;
           clip-path: polygon(100% 0, 100% 100%, 0 100%);

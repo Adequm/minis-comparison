@@ -154,6 +154,7 @@ export default {
       this.questionIndex++;
       this.sortedIndex = 0;
       this.sortedIndexTry = 0;
+      this.$emit('nextStep');
       if(this.questionIndex <= this.lastQuestionIndex) return;
 
       const chunks = _.map(this.prioritiesResult, (answers, index) => {

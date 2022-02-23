@@ -1,8 +1,11 @@
 <template>
-  <div class="minis__content">
+  <div 
+    class="minis__content"
+    :style="{ minHeight: `${ minAppHeight }px` }"
+  >
     <Navigation
       :compareStep="compareStep"
-      :compareMaxSteps="30"
+      :compareMaxSteps="questions.length"
       :isModeEditor="isModeEditor"
       :isModeCompare="isModeCompare"
       :isHistoryExist="!!lodash.size(savedHistory)"
@@ -79,6 +82,7 @@ export default {
     appWidth: Number,
     bodyHeight: Number,
     isDesktop: Boolean,
+    minAppHeight: Number,
   },
 
   data: () => ({
@@ -91,6 +95,12 @@ export default {
     valueQuestion: '',
     valuePriority: '',
   }),
+
+  watch: {
+    isModeCompare() {
+      this.compareStep = 1;
+    }
+  },
 
   computed: {
     ...mapState([
@@ -175,6 +185,7 @@ export default {
   font-size: 18px;
   box-shadow: 0 3px 0 2px var(--main-bg-color);
   position: relative;
+  top: 0;
 
   .minis__display {
     padding: 20px;
