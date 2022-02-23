@@ -3,51 +3,94 @@
     class="container" 
     :style="{ 
       height: `${ innerHeight }px`, 
-      maxWidth: innerWidth < 768 ? '100vw' : `${ appWidth }px`
+      maxWidth: innerWidth < 768 ? '100vw' : `${ containerWidth }px`
     }"
   >
-    <Icon 
-      v-if="!isPageLoad"
-      type="loader"
-      class="loader"
-      rotate
-    />
-    <router-view
-      v-else
-      :themeIcon="themeMain.icon"
-      :minisLang="minisLang"
-      :appWidth="appWidth"
-      :bodyWidth="innerWidth"
-      :bodyHeight="innerHeight"
-      @switchTheme="switchTheme"
-      @switchLang="switchLang"
-      @changeAppWidth="changeContainerAppWidth"
-    />
+    <Icon v-if="!isPageLoad" type="loader" class="loader" rotate/>
+
+    <div v-else class="minis__wrapper">
+      <Settings
+        :themeIcon="themeMain.icon"
+        v-model="isClosedSettings"
+        @switchTheme="switchTheme"
+        @switchLang="switchLang"
+      />
+
+      <router-view 
+        :appWidth="appWidth" 
+        :bodyHeight="innerHeight"
+        :isDesktop="isDesktop"
+        @switchSettings="isClosedSettings = !isClosedSettings"
+      />
+
+      <div class="resize_button" @mousedown.prevent="startResize"/>
+      <a href="https://adequm.github.io/minis" target="_blank" class="minis">Minis</a>
+    </div>
+
   </div>
 </template>
 
 <script>
+import _ from 'lodash';
 import minisMixin from './mixins/minis.mixin';
-import Icon from './components/Icon.vue';
+import Icon from './components/app/Icon.vue';
+import Settings from './components/app/Settings.vue';
 
 export default {
   components: {
+    Settings,
     Icon,
   },
 
   mixins: [minisMixin],
 
   data: () => ({
-    console,
+    containerWidth: 300,
     innerHeight: null,
     innerWidth: null,
-    appWidth: 300,
+    startResizeX: null,
+    startResizeWidth: null,
+    resizeHash: null,
+    isClosedSettings: true,
   }),
 
+  computed: {
+    isDesktop: ths => ths.innerWidth >= 768,
+    appWidth: ths => ths.isDesktop ? ths.containerWidth : ths.innerWidth,
+  },
+
+  watch: {
+    appWidth: 'setResizeHash',
+    innerHeight: 'setResizeHash',
+  },
+
   methods: {
-    changeContainerAppWidth(val) {
-      this.appWidth = Math.min(600, Math.max(val, 300));
-    }
+    setResizeHash() {
+      this.resizeHash = Date.now();
+    },
+    setAppWidth({ pageX }) {
+      requestAnimationFrame(() => {
+        if(_.isNull(this.startResizeX) || _.isNull(this.startResizeWidth)) return;
+        const containerWidth = pageX - this.startResizeX + this.startResizeWidth;
+        this.containerWidth = _.clamp(containerWidth, 300, 600);
+      })
+    },
+
+    startResize(event) {
+      this.startResizeX = event.pageX;
+      this.startResizeWidth = this.containerWidth;
+      document.addEventListener('mousemove', this.setAppWidth);
+      document.addEventListener('mouseup', this.stopResize);
+      window.addEventListener('mouseleave', this.stopResize);
+    },
+
+    stopResize() {
+      this.startResizeX = null;
+      this.startResizeWidth = null;
+      document.removeEventListener('mousemove', this.setAppWidth);
+      document.removeEventListener('mouseup', this.stopResize);
+      window.removeEventListener('mouseleave', this.stopResize);
+    },
   },
 
   beforeMount() {
@@ -74,6 +117,14 @@ export default {
 	background: var(--special-color); 
 }
 
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  outline: none;
+  color: inherit;
+}
+
 body {
   font-family: 'Noto Sans', sans-serif;
   margin: 0;
@@ -96,7 +147,45 @@ body {
   .container {
     width: 100vw;
     margin: 0 auto;
+
+    .minis__wrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+
+      .minis {
+        display: none;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        color: var(--special-color);
+        opacity: .5;
+        cursor: pointer;
+        transition: opacity .2s;
+        text-decoration: none;
+        border: none;
+        outline: none;
+        width: 50px;
+        height: 30px;
+        bottom: 30px;
+        margin: auto;
+        z-index: 5;
+        user-select: none; 
+        &:hover { opacity: 1; }
+        &:focus { color: var(--text-color); }
+      }
+
+      .resize_button {
+        display: none;
+      }
+    }
+
   }
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
 }
 
 @media screen and (min-width: 768px) {
@@ -104,6 +193,26 @@ body {
     .container {
       max-height: 560px;
       margin: auto;
+
+      .minis__wrapper {
+        .minis {
+          display: flex;
+        }
+
+        .resize_button {
+          position: absolute;
+          display: block;
+          width: 10px;
+          height: 10px;
+          background: var(--special-color);
+          bottom: 0;
+          right: 0;
+          z-index: 6;
+          clip-path: polygon(100% 0, 100% 100%, 0 100%);
+          border-radius: 0 0 10px 0;
+          cursor: w-resize;
+        }
+      }
     }
   }
 }

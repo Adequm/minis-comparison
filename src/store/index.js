@@ -9,24 +9,26 @@ const store = {};
 Vue.use(Vuex);
 
 store.state = () => ({
-  history: [],
+  savedHistory: [],
+  questions: [],
+  priorities: [],
 });
 
 
 store.mutations = {
-  addToHistory(state, data) {
-    const newHistory = state.history.slice(-9).concat([data]);
-    Vue.set(state, 'history', newHistory);
-  },
-  clearHistory(state) {
-    Vue.set(state, 'history', []);
-  },
+  addToHistory: ({ savedHistory }, data) => savedHistory.unshift(data),
+  removeFromHistory: ({ savedHistory }, index) => savedHistory.splice(index, 1),
+
+  addQuestion: ({ questions }, question) => questions.push(question),
+  removeQuestion: ({ questions }, index) => questions.splice(index, 1),
+
+  addPriority: ({ priorities }, priority) => priorities.push(priority),
+  removePriority: ({ priorities }, index) => priorities.splice(index, 1),
 };
 
 
-
 const persistedMinis = ['minis.minisThemeMain', 'minis.minisThemeSpecial', 'minis.minisLang'];
-const persistedLocal = ['history'];
+const persistedLocal = ['savedHistory', 'questions', 'priorities'];
 const projectKey = `minis-${ location.pathname.split('/')[1] }`;
 store.modules = { minis: minisModule };
 store.plugins = [
