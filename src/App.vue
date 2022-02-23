@@ -17,7 +17,7 @@
         @switchLang="switchLang"
       />
 
-      <router-view 
+      <LayoutContent
         :appWidth="appWidth" 
         :bodyHeight="innerHeight"
         :isDesktop="isDesktop"
@@ -35,11 +35,13 @@
 <script>
 import _ from 'lodash';
 import minisMixin from './mixins/minis.mixin';
-import Icon from './components/app/Icon.vue';
-import Settings from './components/app/Settings.vue';
+import Icon from './components/app/Icon';
+import Settings from './components/app/Settings';
+import LayoutContent from './components/LayoutContent';
 
 export default {
   components: {
+    LayoutContent,
     Settings,
     Icon,
   },

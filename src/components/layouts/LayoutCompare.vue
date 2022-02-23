@@ -107,7 +107,6 @@ export default {
     },
 
     setSlidesSize() {
-      console.log('setSlidesSize')
       this.swiperRef.slideTo(0, 0);
 
       const width = this.appWidth - 60;
