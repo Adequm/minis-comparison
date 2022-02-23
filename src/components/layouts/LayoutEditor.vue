@@ -152,10 +152,10 @@ export default {
 
     edit(type, index) {
       if(type == 'priority') {
-        this.valuePriority = this.priorities[index];
+        this.$emit('updateValuePriority', this.priorities[index]);
         this.$emit('removePriority', index);
       } else {
-        this.valueQuestion = this.questions[index];
+        this.$emit('updateValueQuestion', this.questions[index]);
         this.$emit('removeQuestion', index);
       }
       this.$refs.textarea.focus();
