@@ -9,10 +9,10 @@
       v-text="isModeEditor ? 'История' : 'Редактор'"
       @click="$emit('switchModeEditor')"
     />
-    <button v-else class="navigation__item nohover" style="cursor: default;">
+    <div v-else class="navigation__item nohover" style="cursor: default;">
       <span v-text="`Шаг: ${ compareQuestionIndex } из ${ compareMaxQuestionsIndex }`"/>
       <div class="compare_loader" :style="{ width: compareLoaderWidth }"/>
-    </button>
+    </div>
 
     <button 
       v-if="!isDesktop"
