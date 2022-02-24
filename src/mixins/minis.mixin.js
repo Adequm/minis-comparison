@@ -9,36 +9,32 @@ export default {
   }),
 
   watch: {
-    translateList: {
+    translateOfMinis: {
       deep: true,
       immediate: true,
-      handler(translateList) {
-        if(!Object.values(translateList).length) return;
+      handler(translateOfMinis) {
+        if(!Object.values(translateOfMinis).length) return;
         document.title = this.translate('title');
       }
     },
     themeMain: {
       deep: true,
-      handler(themeMain) {
-        if(!themeMain) return this.switchTheme('main');
-        Object.entries(themeMain.colors).forEach(([key, color]) => {
-          document.body.style.setProperty(`--${ key }`, color);
-        });
-      },
+      handler: 'themeMainInit',
     },
     themeSpecial: {
       deep: true,
-      handler(themeSpecial) {
-        if(!themeSpecial) return this.switchTheme('special');
-        document.body.style.setProperty(`--special-color`, themeSpecial.normal);
-      }
+      handler: 'themeSpecialInit'
+    },
+    themesJSON: {
+      deep: true,
+      handler: 'themesJSONInit',
     },
   },
 
   computed: {
     ...mapGetters([
         'translate', 
-        'translateList', 
+        'translateOfMinis', 
         'themeMain',
         'themeSpecialName',
         'themeSpecial'
@@ -47,9 +43,9 @@ export default {
       minisTheme: state => state.minis.minisTheme,
       minisLang: state => state.minis.minisLang,
 
-      themesList: state => state.minis.themesList,
-      minisList: state => state.minis.minisList,
-      translateList: state => state.minis.translateList,
+      themesJSON: state => state.minis.themesJSON,
+      minisJSON: state => state.minis.minisJSON,
+      translateJSON: state => state.minis.translateJSON,
     }),
   },
 
@@ -60,26 +56,46 @@ export default {
       initMinis: (commit, args) => commit('initMinis', args),
     }),
 
+    themeMainInit() {
+      if(!this.themeMain) return this.switchTheme('main');
+      Object.entries(this.themeMain.colors).forEach(([key, color]) => {
+        document.body.style.setProperty(`--${ key }`, color);
+      });
+    },
+
+    themeSpecialInit() {
+      if(!this.themeSpecial) return this.switchTheme('special');
+      document.body.style.setProperty(`--special-color`, this.themeSpecial.normal);
+    },
+
+    themesJSONInit() {
+      Object.entries(this.themesJSON.default || []).forEach(([key, color]) => {
+        document.body.style.setProperty(`--${ key }`, color);
+      });
+    },
+
     isExistMinisData() {
-      return _.size(this.themesList)
-        && _.size(this.minisList)
-        && _.size(this.translateList);
+      return _.size(this.themesJSON)
+        && _.size(this.minisJSON)
+        && _.size(this.translateJSON);
     },
 
     getMinisOptions() {
       const linkToMinis = 'https://adequm.github.io/minis';
       return new Promise(async resolve => {
         try {
-          const translateList = await fetch(`${ linkToMinis }/translate.json`).then(d => d.json());
-          const minisList = await fetch(`${ linkToMinis }/minisList.json`).then(d => d.json());
-          const themesList = await fetch(`${ linkToMinis }/themesList.json`).then(d => d.json());
-          Object.entries(themesList.default || []).forEach(([key, color]) => {
-            document.body.style.setProperty(`--${ key }`, color);
-          });
-          resolve({ translateList, minisList, themesList });
+          const translateJSON = await fetch(`${ linkToMinis }/translate.json`).then(d => d.json());
+          const minisJSON = await fetch(`${ linkToMinis }/minisList.json`).then(d => d.json());
+          const themesJSON = await fetch(`${ linkToMinis }/themesList.json`).then(d => d.json());
+          resolve({ translateJSON, minisJSON, themesJSON });
         } catch(err) {
           setTimeout(async () => {
-            if(this.isExistMinisData()) this.isPageLoad = true;
+            if(this.isExistMinisData()) {
+              this.themeMainInit();
+              this.themeSpecialInit();
+              this.themesJSONInit();
+              this.isPageLoad = true;
+            }
             const minisOptions = await this.getMinisOptions();
             resolve(minisOptions);
           }, 2000);

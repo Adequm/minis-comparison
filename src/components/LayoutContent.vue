@@ -210,8 +210,8 @@ export default {
   .minis__content {
     border-radius: 10px;
     clip-path: polygon(
-      0 5px, 5px 0, calc(100% - 5px) 0, 100% 5px, 
-      100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px)
+      0 5px, 5px 0, calc(100% - 5px) 0, 101% 5px, 
+      101% calc(100% - 5px), calc(100% - 5px) 101%, 5px 101%, 0 calc(100% - 5px)
     );
     .minis__display {
       padding-bottom: 30px;

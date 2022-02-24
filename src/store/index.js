@@ -29,7 +29,7 @@ store.mutations = {
 
 const persistedMinis = [
   'minis.minisThemeMain', 'minis.minisThemeSpecial', 'minis.minisLang',
-  'minis.themesList', 'minis.translateList', 'minis.minisList',
+  'minis.themesJSON', 'minis.translateJSON', 'minis.minisJSON',
 ];
 const persistedLocal = ['savedHistory', 'questions', 'priorities'];
 const projectKey = `minis-${ location.pathname.split('/')[1] }`;

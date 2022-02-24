@@ -37,8 +37,8 @@
         />
       </AppModal>
 
-      <div class="resize_button" @mousedown.prevent="startResize"/>
-      <a href="https://adequm.github.io/minis" target="_blank" class="minis">Minis</a>
+      <div v-if="isDesktop" class="resize_button" @mousedown.prevent="startResize"/>
+      <a v-if="isDesktop" href="https://adequm.github.io/minis" target="_blank" class="minis">Minis</a>
     </div>
 
   </div>
@@ -185,7 +185,7 @@ body {
       box-sizing: border-box;
 
       .minis {
-        display: none;
+        display: flex;
         position: relative;
         justify-content: center;
         align-items: center;
@@ -208,7 +208,17 @@ body {
       }
 
       .resize_button {
-        display: none;
+        position: absolute;
+        display: block;
+        width: 10px;
+        height: 10px;
+        background: var(--special-color);
+        transform: translateY(-100%);
+        right: 0;
+        z-index: 6;
+        clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        border-radius: 0 0 10px 0;
+        cursor: w-resize;
       }
     }
 
@@ -220,31 +230,9 @@ body {
 }
 
 @media screen and (min-width: 768px) {
-  body {
-    .container {
-      max-height: 560px;
-      margin: auto;
-
-      .minis__wrapper {
-        .minis {
-          display: flex;
-        }
-
-        .resize_button {
-          position: absolute;
-          display: block;
-          width: 10px;
-          height: 10px;
-          background: var(--special-color);
-          transform: translateY(-100%);
-          right: 0;
-          z-index: 6;
-          clip-path: polygon(100% 0, 100% 100%, 0 100%);
-          border-radius: 0 0 10px 0;
-          cursor: w-resize;
-        }
-      }
-    }
+  body .container {
+    max-height: 560px;
+    margin: auto;
   }
 }
 </style>
