@@ -32,12 +32,12 @@ store.getters = {
 
 store.mutations = {
   switchTheme(state, type = 'main') {
-    const stateKey = type == 'main' ? 'minisThemeMain' : 'minisThemeSpecial';
+    const minisThemeType = type == 'main' ? 'minisThemeMain' : 'minisThemeSpecial';
     const themes = type == 'main' ? state.themesList.main : state.themesList.special.colors;
     const themesList = Object.keys(themes);
-    const themeIndex = themesList.indexOf(state[stateKey]);
+    const themeIndex = themesList.indexOf(state[minisThemeType]);
     const newThemeIndex = (themeIndex + 1) % themesList.length;
-    Vue.set(state, stateKey, themesList[newThemeIndex]);
+    Vue.set(state, minisThemeType, themesList[newThemeIndex]);
   },
   switchLang(state) {
     const langsList = Object.keys(state.translate);

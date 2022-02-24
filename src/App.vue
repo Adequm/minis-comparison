@@ -105,12 +105,14 @@ export default {
   },
 
   beforeMount() {
-    this.innerHeight = innerHeight;
-    this.innerWidth = innerWidth;
-    window.addEventListener('resize', event => {
+    const updateInnerSize = () => {
       this.innerHeight = innerHeight;
       this.innerWidth = innerWidth;
-    })
+    }
+
+    updateInnerSize();
+    window.addEventListener('resize', updateInnerSize);
+    setInterval(updateInnerSize, 1000);
   },
 };
 </script>
