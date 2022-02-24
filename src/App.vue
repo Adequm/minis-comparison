@@ -9,7 +9,7 @@
     <Icon v-if="!isPageLoad" type="loader" class="loader" rotate/>
 
     <div v-else class="minis__wrapper">
-      <Settings
+      <SettingsDesktop
         v-if="isDesktop"
         :themeIcon="themeMain.icon"
         v-model="isClosedSettings"
@@ -22,9 +22,20 @@
         :appHeight="appHeight"
         :bodyHeight="innerHeight"
         :isDesktop="isDesktop"
+        :style="{ filter: openedModalName ? 'blur(2px)' : 'none' }"
         @switchSettings="isClosedSettings = !isClosedSettings"
         @updateInputFocus="onInputFocus = $event"
+        @openModal="openedModalName = $event"
       />
+
+      <AppModal v-model="openedModalName">
+        <SettingsMobile 
+          v-if="openedModalName == 'settings'"
+          :themeIcon="themeMain.icon"
+          @switchTheme="switchTheme"
+          @switchLang="switchLang"
+        />
+      </AppModal>
 
       <div class="resize_button" @mousedown.prevent="startResize"/>
       <a href="https://adequm.github.io/minis" target="_blank" class="minis">Minis</a>
@@ -37,13 +48,17 @@
 import _ from 'lodash';
 import minisMixin from './mixins/minis.mixin';
 import Icon from './components/app/Icon';
-import Settings from './components/app/Settings';
+import SettingsDesktop from './components/app/SettingsDesktop';
+import SettingsMobile from './components/app/SettingsMobile';
+import AppModal from './components/app/AppModal';
 import LayoutContent from './components/LayoutContent';
 
 export default {
   components: {
     LayoutContent,
-    Settings,
+    AppModal,
+    SettingsDesktop,
+    SettingsMobile,
     Icon,
   },
 
@@ -57,8 +72,18 @@ export default {
     startResizeWidth: null,
     resizeHash: null,
     isClosedSettings: true,
+    openedModalName: null,
     onInputFocus: false,
   }),
+
+  watch: {
+    isDesktop(isDesktop) {
+      if(isDesktop && this.openedModalName == 'settings') {
+        this.openedModalName = null;
+        this.isClosedSettings = false;
+      }
+    }
+  },
 
   computed: {
     isDesktop: ths => ths.innerWidth >= 768,
@@ -122,6 +147,7 @@ export default {
 button {
   font-family: inherit;
   font-size: inherit;
+  font-weight: inherit;
   border: none;
   outline: none;
   color: inherit;
@@ -154,6 +180,9 @@ body {
       width: 100%;
       height: 100%;
       position: relative;
+      box-shadow: 0 3px 0 2px var(--main-bg-color);
+      border-radius: 10px;
+      box-sizing: border-box;
 
       .minis {
         display: none;

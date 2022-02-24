@@ -1,14 +1,25 @@
 <template>
-  <div class="navigation">
+  <div 
+    class="navigation"
+    :style="{ gridTemplateColumns: isDesktop ? '2fr 1fr' : '2fr 50px 1fr' }"
+  >
     <button 
       v-if="!isModeCompare"
       class="navigation__item"
       v-text="isModeEditor ? 'История' : 'Редактор'"
       @click="$emit('switchModeEditor')"
     />
-    <button v-else class="navigation__item navigation__item-nohover" style="cursor: default;">
-      <span v-text="`Шаг: ${ compareStep } из ${ compareMaxSteps }`"/>
+    <button v-else class="navigation__item nohover" style="cursor: default;">
+      <span v-text="`Шаг: ${ compareQuestionIndex } из ${ compareMaxQuestionsIndex }`"/>
       <div class="compare_loader" :style="{ width: compareLoaderWidth }"/>
+    </button>
+
+    <button 
+      v-if="!isDesktop"
+      class="navigation__item nofocus nohover"
+      @click="$emit('openModal', 'settings')"
+    >
+      <Icon type="settings"/>
     </button>
 
     <button 
@@ -42,33 +53,39 @@ export default {
   },
 
   props: {
+    isDesktop: Boolean,
     isModeCompare: Boolean,
     isModeEditor: Boolean,
     isHistoryExist: Boolean,
     isEditorDataExist: Boolean,
-    compareStep: Number,
-    compareMaxSteps: Number,
+    compareQuestionIndex: Number,
+    compareMaxQuestionsIndex: Number,
   },
 
+  data: () => ({
+    console,
+  }),
+
   computed: {
-    compareLoaderWidth: ths => `${ ths.compareStep / ths.compareMaxSteps * 100 }%`,
+    compareLoaderWidth: ths => `${ ths.compareQuestionIndex / ths.compareMaxQuestionsIndex * 100 }%`,
   },
 };
 </script>
 
 <style lang="scss" scope>
 .navigation {
-  grid-template-columns: 2fr 1fr;
   user-select: none; 
   padding: 20px;
   border-radius: 10px;
   display: grid;
   grid-auto-flow: column dense;
-  gap: 20px;
+  gap: 10px;
   box-sizing: border-box;
   z-index: 5;
+  font-size: 16px;
+  font-weight: bold;
 
-  button:focus {
+  button:not(.nofocus):focus {
     outline: 1px solid var(--text-color);
   }
 
@@ -81,7 +98,7 @@ export default {
     position: relative;
     background-color: var(--content-bg-color);
     user-select: none; 
-    &:not(&-nohover):hover { opacity: .8; }
+    &:not(.nohover):hover { opacity: .8; }
     &-special {
       background-color: var(--special-color);
       color: #F3F3F3;
@@ -99,8 +116,8 @@ export default {
       max-width: 100%;
       border-radius: 10px;
       background-color: var(--special-color);
-      opacity: 0.33;
-      transition: width 0.33s;
+      opacity: .5;
+      transition: width .5s;
     }
   }
 }

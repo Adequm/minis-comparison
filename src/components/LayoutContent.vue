@@ -7,15 +7,17 @@
     }"
   >
     <Navigation
-      :compareStep="compareStep"
-      :compareMaxSteps="questions.length"
+      :isDesktop="isDesktop"
       :isModeEditor="isModeEditor"
       :isModeCompare="isModeCompare"
       :isHistoryExist="!!lodash.size(savedHistory)"
       :isEditorDataExist="!!questions.length && priorities.length >= 2"
+      :compareQuestionIndex="compareQuestionIndex"
+      :compareMaxQuestionsIndex="questions.length"
       @removeFromHistory="removeFromHistoryHandler"
       @switchModeCompare="isModeCompare = !isModeCompare"
       @switchModeEditor="isModeEditor = !isModeEditor"
+      @openModal="$emit('openModal', $event)"
     />
 
     <div class="minis__display">
@@ -26,7 +28,7 @@
         :bodyHeight="bodyHeight"
         :questions="questions"
         :priorities="priorities"
-        @nextStep="compareStep++"
+        @nextStep="compareQuestionIndex++"
         @finish-comparison="finishComparison"
       />
       <template v-else>
@@ -93,7 +95,7 @@ export default {
     lodash: _,
     isModeEditor: true,
     isModeCompare: false,
-    compareStep: 1,
+    compareQuestionIndex: 1,
     slideIndexHistory: 0,
     slideIndexEditor: 1,
     valueQuestion: '',
@@ -102,7 +104,7 @@ export default {
 
   watch: {
     isModeCompare() {
-      this.compareStep = 1;
+      this.compareQuestionIndex = 1;
     }
   },
 
@@ -191,9 +193,9 @@ export default {
   background-color: var(--main-bg-color);
   color: var(--text-color);
   font-size: 18px;
-  box-shadow: 0 3px 0 2px var(--main-bg-color);
   position: relative;
   top: 0;
+  z-index: 1;
 
   .minis__display {
     padding: 20px;
@@ -207,6 +209,10 @@ export default {
 @media screen and (min-width: 768px) {
   .minis__content {
     border-radius: 10px;
+    clip-path: polygon(
+      0 5px, 5px 0, calc(100% - 5px) 0, 100% 5px, 
+      100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px)
+    );
     .minis__display {
       padding-bottom: 30px;
     }
