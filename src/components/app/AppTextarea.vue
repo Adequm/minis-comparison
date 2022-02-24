@@ -14,6 +14,8 @@
         maxlength="80"
         @keydown.enter="textareaKeyDownEnter"
         @input="$emit('input', $event.target.value)"
+        @focus="$emit('updateInputFocus', true)"
+        @blur="$emit('updateInputFocus', false)"
       />
       <button type="submit">
         <Icon type="plus"/>

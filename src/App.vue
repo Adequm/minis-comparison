@@ -21,8 +21,9 @@
         :appWidth="appWidth" 
         :bodyHeight="innerHeight"
         :isDesktop="isDesktop"
-        :minAppHeight="minAppHeight"
+        :minAppHeight="isDesktop ? 560 : innerHeight"
         @switchSettings="isClosedSettings = !isClosedSettings"
+        @updateInputFocus="onInputFocus = $event"
       />
 
       <div class="resize_button" @mousedown.prevent="startResize"/>
@@ -49,6 +50,7 @@ export default {
   mixins: [minisMixin],
 
   data: () => ({
+    console,
     containerWidth: 300,
     innerHeight: null,
     innerWidth: null,
@@ -56,7 +58,7 @@ export default {
     startResizeWidth: null,
     resizeHash: null,
     isClosedSettings: true,
-    minAppHeight: 560,
+    onInputFocus: false,
   }),
 
   computed: {
@@ -64,22 +66,8 @@ export default {
     appWidth: ths => ths.isDesktop ? ths.containerWidth : ths.innerWidth,
   },
 
-  watch: {
-    appWidth: 'setResizeHash',
-    innerHeight: 'setResizeHash',
-    isDesktop: {
-      immediate: true,
-      handler(isDesktop) {
-        this.minAppHeight = isDesktop ? 560 : innerHeight;
-      }
-    },
-  },
-
   methods: {
-    setResizeHash() {
-      this.resizeHash = Date.now();
-    },
-    setAppWidth({ pageX }) {
+    setContainerWidth({ pageX }) {
       requestAnimationFrame(() => {
         if(_.isNull(this.startResizeX) || _.isNull(this.startResizeWidth)) return;
         const containerWidth = pageX - this.startResizeX + this.startResizeWidth;
@@ -90,7 +78,7 @@ export default {
     startResize(event) {
       this.startResizeX = event.pageX;
       this.startResizeWidth = this.containerWidth;
-      document.addEventListener('mousemove', this.setAppWidth);
+      document.addEventListener('mousemove', this.setContainerWidth);
       document.addEventListener('mouseup', this.stopResize);
       window.addEventListener('mouseleave', this.stopResize);
     },
@@ -98,7 +86,7 @@ export default {
     stopResize() {
       this.startResizeX = null;
       this.startResizeWidth = null;
-      document.removeEventListener('mousemove', this.setAppWidth);
+      document.removeEventListener('mousemove', this.setContainerWidth);
       document.removeEventListener('mouseup', this.stopResize);
       window.removeEventListener('mouseleave', this.stopResize);
     },
@@ -106,8 +94,9 @@ export default {
 
   beforeMount() {
     const updateInnerSize = () => {
+      this.innerWidth = document.body.offsetWidth;
+      if(this.onInputFocus) return;
       this.innerHeight = innerHeight;
-      this.innerWidth = innerWidth;
     }
 
     updateInnerSize();

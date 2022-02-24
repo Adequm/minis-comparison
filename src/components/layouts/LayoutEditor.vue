@@ -9,6 +9,7 @@
       :placeholder="slideIndex ? 'Ваш приоритет' : 'Уточняющий вопрос'"
       @input="inputTextarea"
       @submit="submitTextarea"
+      @updateInputFocus="$emit('updateInputFocus', $event)"
     />
 
     <div class="layout__display" :class="{ isEnd, isBeginning }">

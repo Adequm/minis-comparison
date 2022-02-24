@@ -43,6 +43,7 @@
           @addQuestion="addQuestion"
           @removeQuestion="removeQuestion"
           @removePriority="removePriority"
+          @updateInputFocus="$emit('updateInputFocus', $event)"
         />
         <LayoutHistory
           v-if="!isModeEditor"
