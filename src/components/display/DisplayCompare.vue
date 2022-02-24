@@ -63,6 +63,7 @@ export default {
         answers[+!answerIndex].style.setProperty('transition', `${ typeShift } .5s`);
         answers[+!answerIndex].style.setProperty(typeShift, '50px'); 
         answers[answerIndex].style.setProperty('background-color', 'var(--special-color)');
+        answers[answerIndex].style.setProperty('opacity', '.5');
         answers[answerIndex].style.setProperty('color', 'var(--text-color)');
   
         setTimeout(() => {
@@ -71,6 +72,7 @@ export default {
         }, 800);
 
         setTimeout(() => {
+          answers[answerIndex].style.removeProperty('opacity');
           answers[answerIndex].style.removeProperty('background-color');
           answers[answerIndex].style.removeProperty('color');
           this.$emit('select', answerIndex);
