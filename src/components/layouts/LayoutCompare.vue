@@ -130,7 +130,7 @@ export default {
     startСomparison() {
       _.times(this.questions.length, question => {
         const answers = _.cloneDeep(this.priorities);
-        this.prioritiesResult.push(answers);
+        this.prioritiesResult.push(_.shuffle(answers));
       });
 
       this.optionMaxIndex = this.priorities.length - 1;
