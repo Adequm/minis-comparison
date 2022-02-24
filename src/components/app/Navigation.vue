@@ -32,7 +32,7 @@
     </button>
     <button 
       v-else
-      class="navigation__item"
+      class="navigation__item nofocus"
       style="color: var(--special-color);"
       :disabled="!isHistoryExist"
       @click="isHistoryExist && $emit('openModal', 'deletionConfirmation')"
