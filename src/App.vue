@@ -19,9 +19,9 @@
 
       <LayoutContent
         :appWidth="appWidth" 
+        :appHeight="appHeight"
         :bodyHeight="innerHeight"
         :isDesktop="isDesktop"
-        :minAppHeight="isDesktop ? 560 : innerHeight"
         @switchSettings="isClosedSettings = !isClosedSettings"
         @updateInputFocus="onInputFocus = $event"
       />
@@ -50,7 +50,6 @@ export default {
   mixins: [minisMixin],
 
   data: () => ({
-    console,
     containerWidth: 300,
     innerHeight: null,
     innerWidth: null,
@@ -64,6 +63,7 @@ export default {
   computed: {
     isDesktop: ths => ths.innerWidth >= 768,
     appWidth: ths => ths.isDesktop ? ths.containerWidth : ths.innerWidth,
+    appHeight: ths => ths.isDesktop ? 560 : ths.innerHeight,
   },
 
   methods: {

@@ -1,7 +1,10 @@
 <template>
   <div 
     class="minis__content"
-    :style="{ minHeight: `${ minAppHeight }px` }"
+    :style="{ 
+      minHeight: `${ appHeight }px`,
+      gridTemplateRows
+    }"
   >
     <Navigation
       :compareStep="compareStep"
@@ -81,9 +84,9 @@ export default {
 
   props: {
     appWidth: Number,
+    appHeight: Number,
     bodyHeight: Number,
     isDesktop: Boolean,
-    minAppHeight: Number,
   },
 
   data: () => ({
@@ -109,6 +112,11 @@ export default {
       'questions', 
       'priorities',
     ]),
+    gridTemplateRows() {
+      const header = Math.min(this.appHeight * 0.15, 85);
+      const content = this.appHeight - header;
+      return `${ header }px ${ content }px`;
+    },
   },
 
   methods: {
@@ -179,7 +187,6 @@ export default {
 
 .minis__content {
   display: grid;
-  grid-template-rows: 15% 85%;
   height: inherit;
   background-color: var(--main-bg-color);
   color: var(--text-color);
