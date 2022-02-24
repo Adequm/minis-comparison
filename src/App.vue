@@ -18,6 +18,7 @@
       />
 
       <LayoutContent
+        ref="layoutContent"
         :appWidth="appWidth" 
         :appHeight="appHeight"
         :bodyHeight="innerHeight"
@@ -26,6 +27,7 @@
         @switchSettings="isClosedSettings = !isClosedSettings"
         @updateInputFocus="onInputFocus = $event"
         @openModal="openedModalName = $event"
+        @setSlideIndexHistory="slideIndexHistory = $event"
       />
 
       <AppModal v-model="openedModalName">
@@ -35,6 +37,11 @@
           @switchTheme="switchTheme"
           @switchLang="switchLang"
         />
+        <div v-if="openedModalName == 'deletionConfirmation'" class="confirmation">
+          <span>Вы уверены, что хотите удалить запись из истории от</span>
+          <strong v-text="getFormatDate(lodash.get(savedHistory[slideIndexHistory], 'date'))"/>
+          <button v-text="'Удалить'" @click="removeFromHistoryHandler"/>
+        </div>
       </AppModal>
 
       <div v-if="isDesktop" class="resize_button" @mousedown.prevent="startResize"/>
@@ -53,6 +60,8 @@ import SettingsMobile from './components/app/SettingsMobile';
 import AppModal from './components/app/AppModal';
 import LayoutContent from './components/LayoutContent';
 
+import { mapState } from 'vuex';
+
 export default {
   components: {
     LayoutContent,
@@ -65,6 +74,7 @@ export default {
   mixins: [minisMixin],
 
   data: () => ({
+    lodash: _,
     containerWidth: 300,
     innerHeight: null,
     innerWidth: null,
@@ -74,6 +84,7 @@ export default {
     isClosedSettings: true,
     openedModalName: null,
     onInputFocus: false,
+    slideIndexHistory: 0,
   }),
 
   watch: {
@@ -86,6 +97,7 @@ export default {
   },
 
   computed: {
+    ...mapState(['savedHistory']),
     isDesktop: ths => ths.innerWidth >= 768,
     appWidth: ths => ths.isDesktop ? ths.containerWidth : ths.innerWidth,
     appHeight: ths => ths.isDesktop ? 560 : ths.innerHeight,
@@ -114,6 +126,22 @@ export default {
       document.removeEventListener('mousemove', this.setContainerWidth);
       document.removeEventListener('mouseup', this.stopResize);
       window.removeEventListener('mouseleave', this.stopResize);
+    },
+
+    getFormatDate(dateNow) {
+      if(!dateNow) return this.translate('error');
+      const date = new Date(dateNow);
+      const day = date.getDate().toString().padStart(2, 0);
+      const month = (date.getMonth() + 1).toString().padStart(2, 0);
+      const year = date.getFullYear();
+      const hour = date.getHours().toString().padStart(2, 0);
+      const minutes = date.getMinutes().toString().padStart(2, 0);
+      return `${ day }.${ month }.${ year } | ${ hour }:${ minutes }`;
+    },
+
+    removeFromHistoryHandler() {
+      this.$refs.layoutContent.removeFromHistoryHandler(this.slideIndexHistory);
+      this.openedModalName = null;
     },
   },
 
@@ -183,6 +211,26 @@ body {
       box-shadow: 0 3px 0 2px var(--main-bg-color);
       border-radius: 10px;
       box-sizing: border-box;
+
+      .confirmation {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        font-size: 18px;
+        strong {
+          color: var(--special-color);
+        }
+        button {
+          margin-top: 10px;
+          border-radius: 10px;
+          padding: 10px;
+          background: var(--special-color);
+          cursor: pointer;
+          &:hover {
+            opacity: .8;
+          }
+        }
+      }
 
       .minis {
         display: flex;

@@ -105,7 +105,10 @@ export default {
   watch: {
     isModeCompare() {
       this.compareQuestionIndex = 1;
-    }
+    },
+    slideIndexHistory(index) {
+      this.$emit('setSlideIndexHistory', index);
+    },
   },
 
   computed: {

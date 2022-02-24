@@ -63,7 +63,6 @@ export default {
         answers[+!answerIndex].style.setProperty('transition', `${ typeShift } .5s`);
         answers[+!answerIndex].style.setProperty(typeShift, '50px'); 
         answers[answerIndex].style.setProperty('background-color', 'var(--special-color)');
-        answers[answerIndex].style.setProperty('opacity', '.5');
         answers[answerIndex].style.setProperty('color', 'var(--text-color)');
   
         setTimeout(() => {
@@ -111,6 +110,7 @@ export default {
       position: relative;
       width: 100%;
       height: 100%;
+      z-index: 4;
       transition: width .2s, height .2s;
       &:nth-child(1)::before {
         content: "VS";
@@ -129,6 +129,9 @@ export default {
         background: var(--content-bg-color);
         outline: 10px solid var(--main-bg-color);
         box-shadow: 0 0 0 1px var(--content-bg-color);
+      }
+      &:nth-child(2) {
+        z-index: 3;
       }
       &:hover {
         color: var(--special-color);

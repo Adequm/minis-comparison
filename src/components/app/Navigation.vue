@@ -35,7 +35,7 @@
       class="navigation__item"
       style="color: var(--special-color);"
       :disabled="!isHistoryExist"
-      @click="isHistoryExist && $emit('removeFromHistory')"
+      @click="isHistoryExist && $emit('openModal', 'deletionConfirmation')"
     >
       <Icon type="trash"/>
     </button>
