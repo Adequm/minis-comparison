@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
@@ -45,6 +46,10 @@ export default {
     ...mapState({ 
       minisTheme: state => state.minis.minisTheme,
       minisLang: state => state.minis.minisLang,
+
+      themesList: state => state.minis.themesList,
+      minisList: state => state.minis.minisList,
+      translateList: state => state.minis.translateList,
     }),
   },
 
@@ -55,19 +60,26 @@ export default {
       initMinis: (commit, args) => commit('initMinis', args),
     }),
 
+    isExistMinisData() {
+      return _.size(this.themesList)
+        && _.size(this.minisList)
+        && _.size(this.translateList);
+    },
+
     getMinisOptions() {
       const linkToMinis = 'https://adequm.github.io/minis';
       return new Promise(async resolve => {
         try {
-          const translate = await fetch(`${ linkToMinis }/translate.json`).then(d => d.json());
+          const translateList = await fetch(`${ linkToMinis }/translate.json`).then(d => d.json());
           const minisList = await fetch(`${ linkToMinis }/minisList.json`).then(d => d.json());
           const themesList = await fetch(`${ linkToMinis }/themesList.json`).then(d => d.json());
           Object.entries(themesList.default || []).forEach(([key, color]) => {
             document.body.style.setProperty(`--${ key }`, color);
           });
-          resolve({ translate, minisList, themesList });
+          resolve({ translateList, minisList, themesList });
         } catch(err) {
           setTimeout(async () => {
+            if(this.isExistMinisData()) this.isPageLoad = true;
             const minisOptions = await this.getMinisOptions();
             resolve(minisOptions);
           }, 2000);

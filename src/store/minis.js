@@ -6,13 +6,13 @@ store.state = () => ({
   minisThemeMain: null,
   minisThemeSpecial: null,
   themesList: {},
-  translate: {},
+  translateList: {},
   minisList: {},
 });
 
 store.getters = {
-  translateList({ translate, minisLang }) {
-    return translate?.[minisLang]?.priorities || {};
+  translateList({ translateList, minisLang }) {
+    return translateList?.[minisLang]?.priorities || {};
   },
   translate({}, { translateList }) {
     return path => translateList?.[path] || 'Err';
@@ -40,14 +40,14 @@ store.mutations = {
     Vue.set(state, minisThemeType, themesList[newThemeIndex]);
   },
   switchLang(state) {
-    const langsList = Object.keys(state.translate);
+    const langsList = Object.keys(state.translateList);
     const langIndex = langsList.indexOf(state.minisLang);
     const newLangIndex = (langIndex + 1) % langsList.length;
     Vue.set(state, 'minisLang', langsList[newLangIndex]);
   },
-  initMinis(state, { translate, minisList, themesList }) {
+  initMinis(state, { translateList, minisList, themesList }) {
     Vue.set(state, 'minisList', minisList);
-    Vue.set(state, 'translate', translate);
+    Vue.set(state, 'translateList', translateList);
     Vue.set(state, 'themesList', themesList);
   },
 };

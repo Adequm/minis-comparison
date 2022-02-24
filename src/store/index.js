@@ -27,7 +27,10 @@ store.mutations = {
 };
 
 
-const persistedMinis = ['minis.minisThemeMain', 'minis.minisThemeSpecial', 'minis.minisLang'];
+const persistedMinis = [
+  'minis.minisThemeMain', 'minis.minisThemeSpecial', 'minis.minisLang',
+  'minis.themesList', 'minis.translateList', 'minis.minisList',
+];
 const persistedLocal = ['savedHistory', 'questions', 'priorities'];
 const projectKey = `minis-${ location.pathname.split('/')[1] }`;
 store.modules = { minis: minisModule };
