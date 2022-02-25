@@ -168,10 +168,10 @@ export default {
         : this.$emit('updateValueQuestion', value);
     },
 
-    submitTextarea() {
+    submitTextarea(value) {
       this.slideIndex
-        ? this.$emit('addPriority', this.valuePriority)
-        : this.$emit('addQuestion', this.valueQuestion);
+        ? this.$emit('addPriority', value)
+        : this.$emit('addQuestion', value);
     },
 
     addDefaultQuestion() {

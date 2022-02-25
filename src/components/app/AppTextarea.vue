@@ -80,7 +80,7 @@ export default {
 
     submit() {
       if(!this.value.replace(/\n/g, '')) return;
-      this.$emit('submit', this.value.trim());
+      this.$emit('submit', this.value.trim().replace(/\n+$/, ''));
       this.$emit('input', '');
     },
   },  

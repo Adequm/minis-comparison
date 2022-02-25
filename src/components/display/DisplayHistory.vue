@@ -1,5 +1,5 @@
 <template>
-  <div class="history__container-scroll">
+  <div class="history__container-scroll" @click="choicedItem = null">
 
     <div
       v-for="(chunk, chunkIndex) of historyOfDate"
@@ -14,6 +14,8 @@
         v-for="(answer, answerIndex) of chunk.answers"
         :key="answerIndex"
         class="history__chunk_item"
+        :class="{ 'history__chunk_item-active': choicedItem == answer }"
+        @click.stop="choicedItem = answer"
         v-text="answer"
       />
     </div>
@@ -34,7 +36,11 @@ export default {
   props: {
     historyOfDate: Array,
   },
-}
+
+  data: () => ({
+    choicedItem: null,
+  }),
+};
 </script>
 
 <style lang="scss" scoped>
@@ -60,11 +66,18 @@ export default {
       padding: 10px;
       background: var(--content-bg-color);
       border-radius: 10px;
+      cursor: pointer;
       overflow-wrap: anywhere;
+      &:hover {
+        opacity: .8;
+      }
       &-question {
         background: var(--special-color); 
         font-weight: bold; 
         text-align: center;
+      }
+      &-active {
+        box-shadow: inset 0 0 0 1px var(--special-color);
       }
     }
   }

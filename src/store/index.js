@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import createMutationsSharer from 'vuex-shared-mutations';
+import _ from 'lodash';
 
 import minisModule from './minis';
 
@@ -19,11 +20,11 @@ store.mutations = {
   addToHistory: ({ savedHistory }, data) => savedHistory.unshift(data),
   removeFromHistory: ({ savedHistory }, index) => savedHistory.splice(index, 1),
 
-  addQuestion: ({ questions }, question) => questions.push(question),
   removeQuestion: ({ questions }, index) => questions.splice(index, 1),
+  addQuestion: ({ questions }, question) => !questions.includes(question) && questions.push(question),
 
-  addPriority: ({ priorities }, priority) => priorities.push(priority),
   removePriority: ({ priorities }, index) => priorities.splice(index, 1),
+  addPriority: ({ priorities }, priority) => !priorities.includes(priority) && priorities.push(priority),
 };
 
 
