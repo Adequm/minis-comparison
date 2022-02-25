@@ -1,8 +1,5 @@
 <template>
-  <div 
-    class="navigation"
-    :style="{ gridTemplateColumns: isDesktop ? '2fr 1fr' : '2fr 50px 1fr' }"
-  >
+  <div class="navigation">
     <button 
       v-if="!isModeCompare"
       class="navigation__item"
@@ -16,7 +13,7 @@
 
     <button 
       v-if="!isDesktop"
-      class="navigation__item nofocus nohover"
+      class="navigation__item navigation__item-settings nofocus nohover"
       @click="$emit('openModal', 'settings')"
     >
       <Icon type="settings"/>
@@ -77,13 +74,13 @@ export default {
   user-select: none; 
   padding: 20px;
   border-radius: 10px;
-  display: grid;
-  grid-auto-flow: column dense;
+  display: flex;
   gap: 10px;
   box-sizing: border-box;
   z-index: 5;
   font-size: 16px;
   font-weight: bold;
+  justify-content: space-between;
 
   button:not(.nofocus):focus {
     outline: 1px solid var(--text-color);
@@ -98,6 +95,23 @@ export default {
     position: relative;
     background-color: var(--content-bg-color);
     user-select: none; 
+
+    &:nth-child(1) {
+      width: 200%;
+      max-width: 300px;
+    }
+
+    &.navigation__item-settings {
+      margin-left: auto;
+      width: 100%;
+      max-width: 50px;
+    }
+
+    &:nth-last-child(1) {
+      width: 100%;
+      max-width: 150px;
+    }
+
     &:not(.nohover):hover { opacity: .8; }
     &-special {
       background-color: var(--special-color);
