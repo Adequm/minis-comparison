@@ -49,7 +49,12 @@
         </div>
       </AppModal>
 
-      <div v-if="isDesktop" class="resize_button" @mousedown.prevent="startResize"/>
+      <div 
+        v-if="isDesktop" 
+        class="resize_button" 
+        @mousedown.prevent="startResize"
+        @dblclick.prevent="autoResize"
+      />
       <a v-if="isDesktop" href="https://adequm.github.io/minis" target="_blank" class="minis">Minis</a>
     </div>
 

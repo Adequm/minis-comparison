@@ -2,8 +2,10 @@ import _ from 'lodash';
 
 export default {
   data: () => ({
-    containerWidth: 300,
-    containerHeight: 560,
+    minContainerWidth: 300,
+    minContainerHeight: 560,
+    containerWidth: null,
+    containerHeight: null,
     innerHeight: null,
     innerWidth: null,
     startResizeX: null,
@@ -26,14 +28,20 @@ export default {
     isDesktop: ths => ths.isWidthMore768 && !ths.isFullscreen,
     appWidth: ths => ths.isDesktop ? ths.containerWidth : ths.innerWidth,
     appHeight: ths => ths.isDesktop ? ths.containerHeight : ths.innerHeight,
+    maxContainerWidth: ths => ths.innerWidth - 180,
+    maxContainerHeight: ths => ths.innerHeight - 100,
+    isMinContainerWidth: ths => ths.containerWidth === ths.minContainerWidth,
+    isMaxContainerWidth: ths => ths.containerWidth === ths.maxContainerWidth,
+    isMinContainerHeight: ths => ths.containerHeight === ths.minContainerHeight,
+    isMaxContainerHeight: ths => ths.containerHeight === ths.maxContainerHeight,
   },
 
   methods: {
     resizeContainer(sizes = {}) {
-      const containerWidth = sizes.containerWidth || this.containerWidth;
-      const containerHeight = sizes.containerHeight || this.containerHeight;
-      this.containerWidth = _.clamp(containerWidth, 300, this.innerWidth - 180);
-      this.containerHeight = _.clamp(containerHeight, 560, this.innerHeight - 100);
+      const { containerWidth: W, minContainerWidth: minW, maxContainerWidth: maxW } = this;
+      const { containerHeight: H, minContainerHeight: minH, maxContainerHeight: maxH } = this;
+      this.containerWidth = _.clamp(sizes.containerWidth || W, minW, maxW);
+      this.containerHeight = _.clamp(sizes.containerHeight || H, minH, maxH);
     },
 
     setContainerSize({ pageX, pageY }) {
@@ -68,6 +76,13 @@ export default {
       window.removeEventListener('mouseleave', this.stopResize);
       window.removeEventListener('click', this.stopResize);
       window.removeEventListener('contextmenu', this.stopResize);
+    },
+
+    autoResize() {
+      this.resizeContainer({ 
+        containerWidth: this.isMinContainerWidth ? this.maxContainerWidth : this.minContainerWidth, 
+        containerHeight: this.isMinContainerHeight ? this.maxContainerHeight : this.minContainerHeight, 
+      });
     },
   },
 
