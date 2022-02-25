@@ -79,9 +79,10 @@ export default {
     },
 
     autoResize() {
+      const isMin = this.isMinContainerWidth && this.isMinContainerHeight;
       this.resizeContainer({ 
-        containerWidth: this.isMinContainerWidth ? this.maxContainerWidth : this.minContainerWidth, 
-        containerHeight: this.isMinContainerHeight ? this.maxContainerHeight : this.minContainerHeight, 
+        containerWidth: isMin ? this.maxContainerWidth : this.minContainerWidth, 
+        containerHeight: isMin ? this.maxContainerHeight : this.minContainerHeight, 
       });
     },
   },
