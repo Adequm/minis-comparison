@@ -8,8 +8,8 @@
     >
       <span v-text="priority"/>
       <div style="float: right">
-        <Icon type="edit" :strokeWidth="3" @click="$emit('edit', index)"/>
-        <Icon type="trash" :strokeWidth="3" @click="$emit('remove', index)"/>
+        <Icon type="edit" @click="$emit('edit', index)"/>
+        <Icon type="trash" @click="$emit('remove', index)"/>
       </div>
     </div>
 
@@ -53,7 +53,8 @@ export default {
     svg {
       height: 1.2em;
       width: 1.2em;
-      color: var(--main-bg-color);
+      color: var(--text-color);
+      opacity: .33;
       margin-top: auto;
       cursor: pointer;
       &:nth-child(1) {
@@ -61,6 +62,7 @@ export default {
       }
       &:hover {
         color: var(--special-color);
+        opacity: 1;
       }
     }
     span {
