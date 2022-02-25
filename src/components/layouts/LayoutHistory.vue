@@ -137,6 +137,7 @@ export default {
         this.swiperRef.snapGrid.splice(index, 1);
         this.swiperRef.slidesSizesGrid.splice(index, 1);
         this.slideLength = this.swiperRef.slides.length;
+        this.setSlidesSize();
       })
     },
 
