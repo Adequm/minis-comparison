@@ -3,7 +3,8 @@
     class="container" 
     :style="{ 
       height: `${ innerHeight }px`, 
-      maxWidth: innerWidth < 768 ? '100vw' : `${ containerWidth }px`
+      maxWidth: innerWidth < 768 ? '100vw' : `${ containerWidth }px`,
+      maxHeight: innerWidth < 768 ? '100vh' : `${ containerHeight }px`,
     }"
   >
     <Icon v-if="!isPageLoad" type="loader" class="loader" rotate/>
@@ -76,10 +77,13 @@ export default {
   data: () => ({
     lodash: _,
     containerWidth: 300,
+    containerHeight: 560,
     innerHeight: null,
     innerWidth: null,
     startResizeX: null,
+    startResizeY: null,
     startResizeWidth: null,
+    startResizeHeight: null,
     resizeHash: null,
     isClosedSettings: true,
     openedModalName: null,
@@ -88,33 +92,45 @@ export default {
   }),
 
   watch: {
+    innerHeight: 'resizeContainer',
+    innerWidth: 'resizeContainer',
     isDesktop(isDesktop) {
       if(isDesktop && this.openedModalName == 'settings') {
         this.openedModalName = null;
         this.isClosedSettings = false;
       }
-    }
+    },
   },
 
   computed: {
     ...mapState(['savedHistory']),
     isDesktop: ths => ths.innerWidth >= 768,
     appWidth: ths => ths.isDesktop ? ths.containerWidth : ths.innerWidth,
-    appHeight: ths => ths.isDesktop ? 560 : ths.innerHeight,
+    appHeight: ths => ths.isDesktop ? ths.containerHeight : ths.innerHeight,
   },
 
   methods: {
-    setContainerWidth({ pageX }) {
+    resizeContainer(sizes = {}) {
+      const containerWidth = sizes.containerWidth || this.containerWidth;
+      const containerHeight = sizes.containerHeight || this.containerHeight;
+      this.containerWidth = _.clamp(containerWidth, 300, this.innerWidth - 150);
+      this.containerHeight = _.clamp(containerHeight, 560, this.innerHeight - 100);
+    },
+
+    setContainerWidth({ pageX, pageY }) {
       requestAnimationFrame(() => {
         if(_.isNull(this.startResizeX) || _.isNull(this.startResizeWidth)) return;
-        const containerWidth = pageX - this.startResizeX + this.startResizeWidth;
-        this.containerWidth = _.clamp(containerWidth, 300, 600);
+        const containerWidth = (pageX - this.startResizeX) * 2 + this.startResizeWidth;
+        const containerHeight = (pageY - this.startResizeY) * 2 + this.startResizeHeight;
+        this.resizeContainer({ containerWidth, containerHeight });
       })
     },
 
     startResize(event) {
       this.startResizeX = event.pageX;
+      this.startResizeY = event.pageY;
       this.startResizeWidth = this.containerWidth;
+      this.startResizeHeight = this.containerHeight;
       document.addEventListener('mousemove', this.setContainerWidth);
       document.addEventListener('mouseup', this.stopResize);
       window.addEventListener('mouseleave', this.stopResize);
@@ -122,7 +138,9 @@ export default {
 
     stopResize() {
       this.startResizeX = null;
+      this.startResizeY = null;
       this.startResizeWidth = null;
+      this.startResizeHeight = null;
       document.removeEventListener('mousemove', this.setContainerWidth);
       document.removeEventListener('mouseup', this.stopResize);
       window.removeEventListener('mouseleave', this.stopResize);
@@ -160,11 +178,11 @@ export default {
 </script>
 
 <style lang="scss">
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 5px; 
 	background-color: var(--content-bg-color);
 }
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   width: 5px; 
 	background-color: var(--special-color); 
 }
@@ -266,7 +284,7 @@ body {
         z-index: 101;
         clip-path: polygon(100% 0, 100% 100%, 0 100%);
         border-radius: 0 0 10px 0;
-        cursor: w-resize;
+        cursor: se-resize;
       }
     }
 
@@ -279,7 +297,6 @@ body {
 
 @media screen and (min-width: 768px) {
   body .container {
-    max-height: 560px;
     margin: auto;
   }
 }
