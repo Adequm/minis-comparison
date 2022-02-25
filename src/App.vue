@@ -117,9 +117,10 @@ export default {
       this.containerHeight = _.clamp(containerHeight, 560, this.innerHeight - 100);
     },
 
-    setContainerWidth({ pageX, pageY }) {
+    setContainerSize({ pageX, pageY }) {
       requestAnimationFrame(() => {
         if(_.isNull(this.startResizeX) || _.isNull(this.startResizeWidth)) return;
+        if(_.isNull(this.startResizeY) || _.isNull(this.startResizeHeight)) return;
         const containerWidth = (pageX - this.startResizeX) * 2 + this.startResizeWidth;
         const containerHeight = (pageY - this.startResizeY) * 2 + this.startResizeHeight;
         this.resizeContainer({ containerWidth, containerHeight });
@@ -131,7 +132,7 @@ export default {
       this.startResizeY = event.pageY;
       this.startResizeWidth = this.containerWidth;
       this.startResizeHeight = this.containerHeight;
-      document.addEventListener('mousemove', this.setContainerWidth);
+      document.addEventListener('mousemove', this.setContainerSize);
       document.addEventListener('mouseup', this.stopResize);
       window.addEventListener('mouseleave', this.stopResize);
     },
@@ -141,7 +142,7 @@ export default {
       this.startResizeY = null;
       this.startResizeWidth = null;
       this.startResizeHeight = null;
-      document.removeEventListener('mousemove', this.setContainerWidth);
+      document.removeEventListener('mousemove', this.setContainerSize);
       document.removeEventListener('mouseup', this.stopResize);
       window.removeEventListener('mouseleave', this.stopResize);
     },
