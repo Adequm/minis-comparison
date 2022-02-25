@@ -23,8 +23,9 @@
     <div class="minis__display">
       <LayoutCompare
         v-if="isModeCompare"
-        :horizontal="isDesktop && appWidth >= 530"
+        :horizontal="isWidthMore768 && appWidth >= 530"
         :appWidth="appWidth"
+        :appHeight="appHeight"
         :bodyHeight="bodyHeight"
         :questions="questions"
         :priorities="priorities"
@@ -89,6 +90,7 @@ export default {
     appHeight: Number,
     bodyHeight: Number,
     isDesktop: Boolean,
+    isWidthMore768: Boolean,
   },
 
   data: () => ({

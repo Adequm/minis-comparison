@@ -12,15 +12,18 @@ export default {
     startResizeHeight: null,
     resizeHash: null,
     onInputFocus: false,
+    isFullscreen: false,
   }),
 
   watch: {
+    isFullscreen: 'resizeContainer',
     innerHeight: 'resizeContainer',
     innerWidth: 'resizeContainer',
   },
 
   computed: {
-    isDesktop: ths => ths.innerWidth >= 768,
+    isWidthMore768: ths => ths.innerWidth >= 768,
+    isDesktop: ths => ths.isWidthMore768 && !ths.isFullscreen,
     appWidth: ths => ths.isDesktop ? ths.containerWidth : ths.innerWidth,
     appHeight: ths => ths.isDesktop ? ths.containerHeight : ths.innerHeight,
   },
@@ -29,7 +32,7 @@ export default {
     resizeContainer(sizes = {}) {
       const containerWidth = sizes.containerWidth || this.containerWidth;
       const containerHeight = sizes.containerHeight || this.containerHeight;
-      this.containerWidth = _.clamp(containerWidth, 300, this.innerWidth - 150);
+      this.containerWidth = _.clamp(containerWidth, 300, this.innerWidth - 180);
       this.containerHeight = _.clamp(containerHeight, 560, this.innerHeight - 100);
     },
 
@@ -51,6 +54,8 @@ export default {
       document.addEventListener('mousemove', this.setContainerSize);
       document.addEventListener('mouseup', this.stopResize);
       window.addEventListener('mouseleave', this.stopResize);
+      window.addEventListener('click', this.stopResize);
+      window.addEventListener('contextmenu', this.stopResize);
     },
 
     stopResize() {
@@ -61,6 +66,8 @@ export default {
       document.removeEventListener('mousemove', this.setContainerSize);
       document.removeEventListener('mouseup', this.stopResize);
       window.removeEventListener('mouseleave', this.stopResize);
+      window.removeEventListener('click', this.stopResize);
+      window.removeEventListener('contextmenu', this.stopResize);
     },
   },
 

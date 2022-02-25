@@ -46,6 +46,7 @@ export default {
   props: {
     horizontal: Boolean,
     appWidth: Number,
+    appHeight: Number,
     bodyHeight: Number,
     questions: Array,
     priorities: Array,
@@ -72,6 +73,7 @@ export default {
     questionTitle: ['setSlideHeight', 'setSlidesSize'],
     horizontal: ['setSlideHeight', 'setSlidesSize'],
     appWidth: ['setSlideHeight', 'setSlidesSize'],
+    appHeight: ['setSlideHeight', 'setSlidesSize'],
     slideIndex: async function (slideIndex) {
       if(slideIndex === 1) return;
       this.swiperRef.slideTo(0, 0);

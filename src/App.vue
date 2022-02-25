@@ -3,8 +3,8 @@
     class="container" 
     :style="{ 
       height: `${ innerHeight }px`, 
-      maxWidth: innerWidth < 768 ? '100vw' : `${ containerWidth }px`,
-      maxHeight: innerWidth < 768 ? '100vh' : `${ containerHeight }px`,
+      maxWidth: isDesktop ? `${ containerWidth }px` : '100vw',
+      maxHeight: isDesktop ? `${ containerHeight }px` : '100vh',
     }"
   >
     <Icon v-if="!isPageLoad" type="loader" class="loader" rotate/>
@@ -16,6 +16,7 @@
         v-model="isClosedSettings"
         @switchTheme="switchTheme"
         @switchLang="switchLang"
+        @switchFullscreen="isFullscreen = !isFullscreen"
       />
 
       <LayoutContent
@@ -24,6 +25,7 @@
         :appHeight="appHeight"
         :bodyHeight="innerHeight"
         :isDesktop="isDesktop"
+        :isWidthMore768="isWidthMore768"
         :style="{ filter: openedModalName ? 'blur(2px)' : 'none' }"
         @switchSettings="isClosedSettings = !isClosedSettings"
         @updateInputFocus="onInputFocus = $event"
@@ -35,8 +37,10 @@
         <SettingsMobile 
           v-if="openedModalName == 'settings'"
           :themeIcon="themeMain.icon"
+          :isWidthMore768="isWidthMore768"
           @switchTheme="switchTheme"
           @switchLang="switchLang"
+          @switchFullscreen="isFullscreen = !isFullscreen"
         />
         <div v-if="openedModalName == 'deletionConfirmation'" class="confirmation">
           <span>Вы уверены, что хотите удалить запись из истории от</span>
