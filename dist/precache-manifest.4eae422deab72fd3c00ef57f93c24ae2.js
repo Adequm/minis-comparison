@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a3db4ba49cd6358bb8f9",
+    "revision": "def88ea902e6b4870d98",
     "url": "/minis-comparison/css/app.8fd496d6.css"
   },
   {
@@ -12,16 +12,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/minis-comparison/img/confetti.14a9dfc6.svg"
   },
   {
-    "revision": "5123007c32755032783650e483006bf2",
+    "revision": "da96ee664c6d546d3f9e3be6d0fdf2fe",
     "url": "/minis-comparison/index.html"
   },
   {
-    "revision": "a3db4ba49cd6358bb8f9",
-    "url": "/minis-comparison/js/app.6e97c338.js"
+    "revision": "def88ea902e6b4870d98",
+    "url": "/minis-comparison/js/app.311b2b78.js"
   },
   {
-    "revision": "f47b9c95e0fb38843d00",
-    "url": "/minis-comparison/js/chunk-vendors.f6ef15b5.js"
+    "revision": "ee8a9bacbdbfb0478eb2",
+    "url": "/minis-comparison/js/chunk-vendors.a47319a3.js"
   },
   {
     "revision": "f058a61915bbe38bea43d97a463f8b95",
