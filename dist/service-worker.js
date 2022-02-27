@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/priorities/precache-manifest.bd771c04843a784001ca7f05ab6bf467.js"
+  "/minis-comparison/precache-manifest.b7b20056b08d6d2c2e6cc6f145dca816.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "priorities"});
+workbox.core.setCacheNameDetails({prefix: "comparison"});
 
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
