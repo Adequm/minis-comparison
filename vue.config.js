@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: '/priorities/'
+  publicPath: '/minis-comparison/'
 }
