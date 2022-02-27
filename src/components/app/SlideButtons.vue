@@ -3,14 +3,14 @@
 
     <button 
       class="slide-button" 
-      :disabled="isBeginning"
-      @click="setSlide(-1)">
+      :disabled="lodash.isBoolean(isBeginning) && isBeginning"
+      @click="$emit('slidePrev') && setSlide(-1)">
       <Icon type="chevrons-left"/>
     </button>
     <button 
       class="slide-button" 
-      :disabled="isEnd"
-      @click="setSlide(1)">
+      :disabled="lodash.isBoolean(isEnd) && isEnd"
+      @click="$emit('slideNext') && setSlide(1)">
       <Icon type="chevrons-right"/>
     </button>
 
@@ -29,11 +29,27 @@ export default {
   },
 
   props: {
-    value: Number,
-    limit: Number,
-    isEnd: Boolean,
-    isBeginning: Boolean,
+    value: {
+      type: Number,
+      default: 0,
+    },
+    limit: {
+      type: Number,
+      default: 0,
+    },
+    isEnd: {
+      type: Boolean,
+      default: null,
+    },
+    isBeginning: {
+      type: Boolean,
+      default: null,
+    },
   },
+
+  data: () => ({
+    lodash: _,
+  }),
 
   methods: {
    setSlide(shift) {

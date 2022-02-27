@@ -30,10 +30,10 @@
     </div>
 
     <SlideButtons
-      v-model="slideIndex"
-      :limit="slideList.length"
-      :isBeginning="isBeginning"
       :isEnd="isEnd"
+      :isBeginning="isBeginning"
+      @slidePrev="lodash.invoke(swiperRef, 'slidePrev')"
+      @slideNext="lodash.invoke(swiperRef, 'slideNext')"
     />
   </div>
 </template>

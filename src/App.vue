@@ -199,7 +199,7 @@ body {
 
       .minis {
         display: flex;
-        position: relative;
+        position: absolute;
         justify-content: center;
         align-items: center;
         font-weight: bold;
@@ -212,7 +212,9 @@ body {
         outline: none;
         width: 50px;
         height: 30px;
-        bottom: 30px;
+        left: 0;
+        right: 0;
+        bottom: 0;
         margin: auto;
         z-index: 5;
         user-select: none; 
@@ -228,6 +230,7 @@ body {
         background: var(--special-color);
         transform: translateY(-100%);
         right: 0;
+        top: 100%;
         z-index: 101;
         clip-path: polygon(100% 0, 100% 100%, 0 100%);
         border-radius: 0 0 10px 0;
