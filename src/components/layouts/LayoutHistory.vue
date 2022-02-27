@@ -16,8 +16,17 @@
           :key="historyIndex"
         >
           <div class="slide__container" :style="{ height: `${ slideHeight }px` }">
-            <div class="history__date" v-text="getFormatDate(history.date)"/>
-            <DisplayHistory :historyOfDate="history.chunks"/>
+            <div class="history__main">
+              <div class="history__main_date" v-text="getFormatDate(history.date)"/>
+              <button class="history__main_delete" @click="$emit('openModal', 'deletionConfirmation')">
+                <Icon type="trash"/>
+              </button>
+            </div>
+            <DisplayHistory 
+              :historyOfDate="history.chunks"
+              :isHistoryModeAnswers="isHistoryModeAnswers"
+              :displayWidth="appWidth - 40"
+            />
           </div>
         </SwiperSlide>
       </Swiper>
@@ -39,6 +48,7 @@
 </template>
 
 <script>
+import Icon from '../app/Icon';
 import _ from 'lodash';
 
 import { Swiper, SwiperSlide } from 'swiper-vue2';
@@ -55,12 +65,14 @@ export default {
     SwiperSlide,
     SlideButtons,
     DisplayEmpty,
+    Icon,
   },
 
   props: {
     appWidth: Number,
     bodyHeight: Number,
     savedHistory: Array,
+    isHistoryModeAnswers: Boolean,
   },
 
   data: () => ({
@@ -199,14 +211,31 @@ export default {
     overflow-x: hidden;
     overflow-y: auto;
 
-    .history__date {
-      text-align: center;
-      border-radius: 10px;
-      background-color: var(--content-bg-color);
+    .history__main {
+      display: grid;
+      grid-template-columns: 1fr 50px;
+      gap: 10px;
       padding: 10px;
-      margin: 10px;
-      margin-bottom: 0;
+      padding-bottom: 0;
+      &_date {
+        text-align: center;
+        border-radius: 10px;
+        background-color: var(--content-bg-color);
+        padding: 10px;
+      }
+      &_delete {
+        border-radius: 10px;
+        background: var(--content-bg-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        &:hover {
+          opacity: .8;
+        }
+      }
     }
+
 
     .slide__container {
       overflow: hidden auto; 

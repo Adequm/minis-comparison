@@ -32,9 +32,9 @@
       class="navigation__item nofocus"
       style="color: var(--special-color);"
       :disabled="!isHistoryExist"
-      @click="isHistoryExist && $emit('openModal', 'deletionConfirmation')"
+      @click="isHistoryExist && $emit('switchModeHistory')"
     >
-      <Icon type="trash"/>
+      <Icon :type="isHistoryModeAnswers ? 'more-vertical' : 'more-horizontal'"/>
     </button>
   </div>
 </template>
@@ -55,6 +55,7 @@ export default {
     isModeEditor: Boolean,
     isHistoryExist: Boolean,
     isEditorDataExist: Boolean,
+    isHistoryModeAnswers: Boolean,
     compareQuestionIndex: Number,
     compareMaxQuestionsIndex: Number,
   },
@@ -69,7 +70,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .navigation {
   user-select: none; 
   padding: 20px;

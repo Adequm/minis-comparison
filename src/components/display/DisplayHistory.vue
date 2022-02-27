@@ -1,8 +1,12 @@
 <template>
-  <div class="history__container-scroll" @click="choicedItem = null">
+  <div 
+    class="history__container-scroll" 
+    :style="{ gridTemplateColumns: `repeat(${ columnsRepeat }, minmax(170px, 1fr))` }"
+    @click="choicedItem = null"
+  >
 
     <div
-      v-for="(chunk, chunkIndex) of historyOfDate"
+      v-for="(chunk, chunkIndex) of chunk"
       :key="chunkIndex"
       class="history__chunk"
     >
@@ -24,6 +28,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import Icon from '../app/Icon';
 
 export default {
@@ -35,11 +40,41 @@ export default {
 
   props: {
     historyOfDate: Array,
+    isHistoryModeAnswers: Boolean,
+    displayWidth: Number,
   },
 
   data: () => ({
     choicedItem: null,
   }),
+
+  computed: {
+    columnsRepeat() {
+      const length = this.chunk.length;
+      const repeat = Math.floor((this.displayWidth - (length+1) * 10) / 170);
+      return Math.min(repeat, length);
+    },
+
+    chunk() {
+      if(!this.isHistoryModeAnswers) return this.historyOfDate;
+
+      const compact = _.reduce(this.historyOfDate, (acc, { question, answers }) => {
+        _.each(answers, (answer, answerIndex) => {
+          const answerData = _.get(acc, answer, {});
+          const questionData = _.get(answerData, answerIndex, []);
+          answerData[answerIndex] = questionData.concat(question);
+          acc[answer] = answerData;
+        })
+        return acc;
+      }, {});
+
+      return _.reduce(compact, (acc, answersExtended, question) => {
+        const answers = _.flatten(_.values(answersExtended));
+        acc.push({ question, answers });
+        return acc;
+      }, []);
+    }, 
+  },
 };
 </script>
 

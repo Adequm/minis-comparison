@@ -12,12 +12,13 @@
       :isModeCompare="isModeCompare"
       :isHistoryExist="!!lodash.size(savedHistory)"
       :isEditorDataExist="!!questions.length && priorities.length >= 2"
+      :isHistoryModeAnswers="isHistoryModeAnswers"
       :compareQuestionIndex="compareQuestionIndex"
       :compareMaxQuestionsIndex="questions.length"
-      @removeFromHistory="removeFromHistoryHandler"
       @switchModeCompare="isModeCompare = !isModeCompare"
       @switchModeEditor="isModeEditor = !isModeEditor"
       @openModal="$emit('openModal', $event)"
+      @switchModeHistory="isHistoryModeAnswers = !isHistoryModeAnswers"
     />
 
     <div class="minis__display">
@@ -57,7 +58,9 @@
           :appWidth="appWidth"
           :bodyHeight="bodyHeight"
           :savedHistory="savedHistory"
+          :isHistoryModeAnswers="isHistoryModeAnswers"
           @changeSlide="slideIndexHistory = $event"
+          @openModal="$emit('openModal', $event)"
         />
       </template>
     </div>
@@ -97,6 +100,7 @@ export default {
     lodash: _,
     isModeEditor: true,
     isModeCompare: false,
+    isHistoryModeAnswers: false,
     compareQuestionIndex: 1,
     slideIndexHistory: 0,
     slideIndexEditor: 1,
