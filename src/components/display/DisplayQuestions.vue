@@ -7,7 +7,7 @@
       class="question__item"
     >
       <span v-text="question"/>
-      <div style="float: right">
+      <div style="float: right; display: flex;">
         <Icon type="edit" @click="$emit('edit', index)"/>
         <Icon type="trash" @click="$emit('remove', index)"/>
       </div>
@@ -50,7 +50,7 @@ export default {
     padding: 10px;
     background: var(--content-bg-color);
     border-radius: 10px;
-    svg {
+    .icon {
       height: 1.2em;
       width: 1.2em;
       color: var(--text-color);

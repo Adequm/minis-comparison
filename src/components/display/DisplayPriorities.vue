@@ -7,9 +7,9 @@
       class="priority__item"
     >
       <span v-text="priority"/>
-      <div style="float: right">
-        <Icon type="edit" @click="$emit('edit', index)"/>
-        <Icon type="trash" @click="$emit('remove', index)"/>
+      <div style="float: right; display: flex;">
+        <Icon type="edit" @click="$emit('edit', index)" size="100%"/>
+        <Icon type="trash" @click="$emit('remove', index)" size="100%"/>
       </div>
     </div>
 
@@ -50,7 +50,7 @@ export default {
     padding: 10px;
     background: var(--content-bg-color);
     border-radius: 10px;
-    svg {
+    .icon {
       height: 1.2em;
       width: 1.2em;
       color: var(--text-color);
