@@ -65,6 +65,7 @@
 import _ from 'lodash';
 import minisMixin from './mixins/minis.mixin';
 import resizeMixin from './mixins/resize.mixin';
+import faviconMixin from './mixins/favicon.mixin';
 import Icon from './components/app/Icon';
 import SettingsDesktop from './components/app/SettingsDesktop';
 import SettingsMobile from './components/app/SettingsMobile';
@@ -82,7 +83,7 @@ export default {
     Icon,
   },
 
-  mixins: [minisMixin, resizeMixin],
+  mixins: [minisMixin, resizeMixin, faviconMixin],
 
   data: () => ({
     lodash: _,
