@@ -18,7 +18,7 @@
         @blur="$emit('updateInputFocus', false)"
       />
       <button type="submit">
-        <Icon type="plus"/>
+        <Icon type="plus-small"/>
       </button>
     </form>
   </div>

@@ -21,7 +21,7 @@
         </template>
         <Icon 
           v-else
-          type="activity" 
+          type="confetti" 
           :size="60" 
           :strokeWidth="1"
           style="opacity: .5;"

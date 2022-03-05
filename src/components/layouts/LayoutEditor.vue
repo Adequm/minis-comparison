@@ -26,7 +26,7 @@
               <DisplayEmpty
                 v-else
                 text="Список уточняющих вопросов"
-                icon="clipboard"
+                icon="notebook"
                 button="Добавить стандартные вопросы"
                 @click="addDefaultQuestion"
               />

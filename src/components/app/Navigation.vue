@@ -25,7 +25,7 @@
       :disabled="!isEditorDataExist"
       @click="isEditorDataExist && $emit('switchModeCompare')"
     >
-      <Icon :type="isModeCompare ? 'x' : 'send'"/>
+      <Icon :type="isModeCompare ? 'cross-small' : 'paper-plane'"/>
     </button>
     <button 
       v-else
@@ -34,7 +34,7 @@
       :disabled="!isHistoryExist"
       @click="isHistoryExist && $emit('switchModeHistory')"
     >
-      <Icon :type="isHistoryModeAnswers ? 'more-vertical' : 'more-horizontal'"/>
+      <Icon :type="isHistoryModeAnswers ? 'menu-dots-vertical' : 'menu-dots'"/>
     </button>
   </div>
 </template>

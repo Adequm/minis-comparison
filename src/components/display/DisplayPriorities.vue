@@ -8,8 +8,8 @@
     >
       <span v-text="priority"/>
       <div style="float: right; display: flex;">
-        <Icon type="edit" @click="$emit('edit', index)" size="100%"/>
-        <Icon type="trash" @click="$emit('remove', index)" size="100%"/>
+        <Icon type="edit" @click="$emit('edit', index)" :size="16"/>
+        <Icon type="trash" @click="$emit('remove', index)" :size="16"/>
       </div>
     </div>
 
@@ -51,8 +51,6 @@ export default {
     background: var(--content-bg-color);
     border-radius: 10px;
     .icon {
-      height: 1.2em;
-      width: 1.2em;
       color: var(--text-color);
       opacity: .33;
       margin-top: auto;
