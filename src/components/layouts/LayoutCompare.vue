@@ -146,8 +146,12 @@ export default {
     selectAnswerRight() {
       const arr = this.prioritiesResult[this.questionIndex];
       const i = this.sortedIndex;
-      [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];     
-      if(i - 1 >= 0) return this.$set(this, 'sortedIndex', _.clamp(i - 1, 0, this.optionMaxIndex));
+      [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
+      if(this.sortedIndex - 1 >= 0) {
+        this.sortedIndex = _.clamp(i - 1, 0, this.optionMaxIndex);
+        return;
+      }
+      this.changedAnswerRightMount++;
       this.selectAnswerLeft();
     },
 

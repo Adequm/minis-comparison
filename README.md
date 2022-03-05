@@ -1,4 +1,4 @@
-# calculator
+# Comparison
 
 ## Project setup
 ```

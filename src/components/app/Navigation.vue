@@ -65,7 +65,7 @@ export default {
   }),
 
   computed: {
-    compareLoaderWidth: ths => `${ ths.compareQuestionIndex / ths.compareMaxQuestionsIndex * 100 }%`,
+    compareLoaderWidth: ths => `${ +(ths.compareQuestionIndex / ths.compareMaxQuestionsIndex * 100).toFixed(2) }%`,
   },
 };
 </script>
@@ -96,6 +96,7 @@ export default {
     position: relative;
     background-color: var(--content-bg-color);
     user-select: none; 
+    padding: 0;
 
     &:nth-child(1) {
       width: 200%;
