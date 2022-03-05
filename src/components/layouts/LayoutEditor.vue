@@ -87,6 +87,7 @@ export default {
   props: {
     isShow: Boolean,
     appWidth: Number,
+    appHeight: Number,
     bodyHeight: Number,
     questions: Array,
     priorities: Array,
@@ -102,6 +103,7 @@ export default {
 
   watch: {
     appWidth: ['setSlideWidth', 'setSlideHeight'],
+    appHeight: ['setSlideWidth', 'setSlideHeight'],
     textareaHeight: ['setSlideWidth', 'setSlideHeight'],
     slideIndex(slideIndex) {
       this.swiperRef.slideTo(slideIndex);

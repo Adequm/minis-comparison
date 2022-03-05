@@ -37,6 +37,7 @@
         <LayoutEditor
           v-if="isModeEditor"
           :appWidth="appWidth"
+          :appHeight="appHeight"
           :bodyHeight="bodyHeight"
           :questions="questions"
           :priorities="priorities"
