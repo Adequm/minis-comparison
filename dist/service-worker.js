@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/minis-comparison/precache-manifest.44e9e176fca7269f394527ebbdb12bed.js"
+  "/minis-comparison/precache-manifest.fdc52daa340bbbe59f9038c9324d6b64.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "comparison"});

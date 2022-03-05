@@ -84,7 +84,7 @@ div.icon {
   }
 }
 
-svg {
+i {
   z-index: 1;
   &.rotate {
     animation: rotate 2s linear infinite;
