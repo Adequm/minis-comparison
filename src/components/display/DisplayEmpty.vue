@@ -23,7 +23,7 @@ export default {
   props: {
     text: String,
     icon: String,
-    button: String,
+    button: [String, Number, Boolean],
   },
 };
 </script>
