@@ -5,11 +5,13 @@ import createMutationsSharer from 'vuex-shared-mutations';
 import _ from 'lodash';
 
 import minisModule from './minis';
+const projectKey = location.pathname.split('/')[1];
 
 const store = {};
 Vue.use(Vuex);
 
 store.state = () => ({
+  projectKey: projectKey.split('-').slice(-1)[0],
   savedHistory: [],
   questions: [],
   priorities: [],
@@ -33,7 +35,6 @@ const persistedMinis = [
   'minis.themesJSON', 'minis.translateJSON', 'minis.minisJSON',
 ];
 const persistedLocal = ['savedHistory', 'questions', 'priorities'];
-const projectKey = location.pathname.split('/')[1];
 store.modules = { minis: minisModule };
 store.plugins = [
   createMutationsSharer({ predicate: () => [...persistedMinis, ...persistedLocal] }),
