@@ -3,11 +3,11 @@
     <button 
       v-if="!isModeCompare"
       class="navigation__item"
-      v-text="isModeEditor ? 'История' : 'Редактор'"
+      v-text="pageName"
       @click="$emit('switchModeEditor')"
     />
     <div v-else class="navigation__item nohover" style="cursor: default;">
-      <span v-text="`Шаг: ${ compareQuestionIndex } из ${ compareMaxQuestionsIndex }`"/>
+      <span v-text="compareStep"/>
       <div class="compare_loader" :style="{ width: compareLoaderWidth }"/>
     </div>
 
@@ -42,8 +42,12 @@
 <script>
 import Icon from './Icon';
 
+import translateMixin from '../../mixins/translate.mixin';
+
 export default {
   name: 'Navigation',
+
+  mixins: [translateMixin],
 
   components: {
     Icon,
@@ -66,6 +70,15 @@ export default {
 
   computed: {
     compareLoaderWidth: ths => `${ +(ths.compareQuestionIndex / ths.compareMaxQuestionsIndex * 100).toFixed(2) }%`,
+    pageName() {
+      return this.isModeEditor 
+        ? this.translate('history.title')
+        : this.translate('editor.title');
+    },
+    compareStep() {
+      const stepName = this.translate('compare.title');
+      return `${ stepName }: ${ this.compareQuestionIndex }/${ this.compareMaxQuestionsIndex }`;
+    },
   },
 };
 </script>

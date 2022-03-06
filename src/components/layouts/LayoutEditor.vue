@@ -6,7 +6,7 @@
       style="margin-bottom: 10px;"
       :resize="appWidth"
       :value="slideIndex ? valuePriority : valueQuestion"
-      :placeholder="slideIndex ? 'Ваш приоритет' : 'Уточняющий вопрос'"
+      :placeholder="textareaPlaceholder"
       @input="inputTextarea"
       @submit="submitTextarea"
       @updateInputFocus="$emit('updateInputFocus', $event)"
@@ -25,10 +25,10 @@
               />
               <DisplayEmpty
                 v-else
-                text="Список уточняющих вопросов"
+                :text="translate('editor.displays.questions.title')"
                 icon="notebook"
-                button="Добавить стандартные вопросы"
-                @click="addDefaultQuestion"
+                :button="questionsList.length && translate('editor.displays.questions.buttonAdd')"
+                @click="questionsList.forEach(q => $emit('addQuestion', q))"
               />
             </div>
           </SwiperSlide>
@@ -42,7 +42,7 @@
               />
               <DisplayEmpty
                 v-else
-                text="Список сравниваемых приоритетов"
+                :text="translate('editor.displays.priorities.title')"
                 icon="star"
               />
             </div>
@@ -64,6 +64,8 @@
 <script>
 import { Swiper, SwiperSlide } from 'swiper-vue2';
 
+import translateMixin from '../../mixins/translate.mixin';
+
 import DisplayPriorities from '../display/DisplayPriorities';
 import DisplayQuestions from '../display/DisplayQuestions';
 import DisplayEmpty from '../display/DisplayEmpty';
@@ -73,6 +75,8 @@ import AppTextarea from '../app/AppTextarea';
 
 export default {
   name: 'LayoutEditor',
+
+  mixins: [translateMixin],
 
   components: {
     SlideButtons,
@@ -99,6 +103,7 @@ export default {
   data: () => ({
     swiperRef: null,
     slideHeight: 0,
+    questionsList: [],
   }),
 
   watch: {
@@ -113,6 +118,12 @@ export default {
       immediate: true,
       handler: 'setSlideHeight',
     },
+    minisLang: {
+      immediate: true,
+      handler() {
+        this.questionsList = this.translate('editor.displays.questions.questionsList', []);
+      }
+    }
   },
 
   computed: {
@@ -126,6 +137,11 @@ export default {
     },
     slideList() {
       return this.swiperRef?.slides || [];
+    },
+    textareaPlaceholder() {
+      return this.slideIndex 
+        ? this.translate('editor.displays.priorities.placeholder') 
+        : this.translate('editor.displays.questions.placeholder');
     },
   },
 
@@ -174,14 +190,6 @@ export default {
       this.slideIndex
         ? this.$emit('addPriority', value)
         : this.$emit('addQuestion', value);
-    },
-
-    addDefaultQuestion() {
-      [
-        'Что важнее прямо сейчас?', 
-        'Чего быстрее добиться?',
-        'Что больше хочется?', 
-      ].forEach(question => this.$emit('addQuestion', question));
     },
   },
 

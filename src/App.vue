@@ -43,9 +43,9 @@
           @switchFullscreen="isFullscreen = !isFullscreen"
         />
         <div v-if="openedModalName == 'deletionConfirmation'" class="confirmation">
-          <span>Вы уверены, что хотите удалить запись из истории от</span>
+          <span v-text="translate('history.displays.history.buttonDeleteConfirm')"/>
           <strong v-text="getFormatDate(lodash.get(savedHistory[slideIndexHistory], 'date'))"/>
-          <button v-text="'Удалить'" @click="removeFromHistoryHandler"/>
+          <button v-text="translateDef('delete')" @click="removeFromHistoryHandler"/>
         </div>
       </AppModal>
 
@@ -66,6 +66,7 @@ import _ from 'lodash';
 import minisMixin from './mixins/minis.mixin';
 import resizeMixin from './mixins/resize.mixin';
 import faviconMixin from './mixins/favicon.mixin';
+import translateMixin from './mixins/translate.mixin';
 import Icon from './components/app/Icon';
 import SettingsDesktop from './components/app/SettingsDesktop';
 import SettingsMobile from './components/app/SettingsMobile';
@@ -83,7 +84,7 @@ export default {
     Icon,
   },
 
-  mixins: [minisMixin, resizeMixin, faviconMixin],
+  mixins: [minisMixin, resizeMixin, faviconMixin, translateMixin],
 
   data: () => ({
     lodash: _,

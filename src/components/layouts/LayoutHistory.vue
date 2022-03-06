@@ -33,7 +33,7 @@
 
       <DisplayEmpty
         v-else
-        text="История ваших сравнений"
+        :text="translate('history.displays.history.title')"
         icon="inbox"
       />
     </div>
@@ -51,6 +51,8 @@
 import Icon from '../app/Icon';
 import _ from 'lodash';
 
+import translateMixin from '../../mixins/translate.mixin';
+
 import { Swiper, SwiperSlide } from 'swiper-vue2';
 import DisplayHistory from '../display/DisplayHistory';
 import DisplayEmpty from '../display/DisplayEmpty.vue';
@@ -58,6 +60,8 @@ import SlideButtons from '../app/SlideButtons.vue';
 
 export default {
   name: 'LayoutHistory',
+
+  mixins: [translateMixin],
 
   components: {
     DisplayHistory,
