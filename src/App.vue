@@ -1,6 +1,7 @@
 <template>
   <div 
     class="container" 
+    :class="{ fullscreen: isFullscreen }"
     :style="{ 
       height: `${ innerHeight }px`, 
       maxWidth: isDesktop ? `${ containerWidth }px` : '100vw',
@@ -16,7 +17,7 @@
         v-model="isClosedSettings"
         @switchTheme="switchTheme"
         @switchLang="switchLang"
-        @switchFullscreen="isFullscreen = !isFullscreen"
+        @switchFullscreen="switchFullscreen"
       />
 
       <LayoutContent
@@ -40,7 +41,7 @@
           :isWidthMore768="isWidthMore768"
           @switchTheme="switchTheme"
           @switchLang="switchLang"
-          @switchFullscreen="isFullscreen = !isFullscreen"
+          @switchFullscreen="switchFullscreen"
         />
         <div v-if="openedModalName == 'deletionConfirmation'" class="confirmation">
           <span v-text="translate('history.displays.history.buttonDeleteConfirm')"/>
@@ -67,13 +68,15 @@ import minisMixin from './mixins/minis.mixin';
 import resizeMixin from './mixins/resize.mixin';
 import faviconMixin from './mixins/favicon.mixin';
 import translateMixin from './mixins/translate.mixin';
+
 import Icon from './components/app/Icon';
 import SettingsDesktop from './components/app/SettingsDesktop';
 import SettingsMobile from './components/app/SettingsMobile';
 import AppModal from './components/app/AppModal';
+
 import LayoutContent from './components/LayoutContent';
 
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   components: {
@@ -107,6 +110,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['switchFullscreen']),
     getFormatDate(dateNow) {
       if(!dateNow) return this.translate('error');
       const date = new Date(dateNow);
