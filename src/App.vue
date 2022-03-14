@@ -34,7 +34,10 @@
         @setSlideIndexHistory="slideIndexHistory = $event"
       />
 
-      <AppModal v-model="openedModalName">
+      <AppModal 
+        v-model="openedModalName" 
+        :isRoundedBorder="isWidthMore768 && !isFullscreen"
+      >
         <SettingsMobile 
           v-if="openedModalName == 'settings'"
           :themeIcon="themeMain.icon"
@@ -56,7 +59,13 @@
         @mousedown.prevent="startResize"
         @dblclick.prevent="autoResize"
       />
-      <a v-if="isDesktop" href="https://adequm.github.io/minis" target="_blank" class="minis">Minis</a>
+      <a 
+        v-if="isDesktop" 
+        href="https://adequm.github.io/minis" 
+        target="_blank" 
+        class="minis"
+        v-text="'Minis'"
+      />
     </div>
 
   </div>
