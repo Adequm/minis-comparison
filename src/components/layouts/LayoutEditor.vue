@@ -71,8 +71,7 @@ import DisplayPriorities from '../display/DisplayPriorities';
 import DisplayQuestions from '../display/DisplayQuestions';
 import DisplayEmpty from '../display/DisplayEmpty';
 
-import SlideButtons from '../app/SlideButtons';
-import AppTextarea from '../app/AppTextarea';
+import { SlideButtons, AppTextarea } from '@minis-core/components';
 
 export default {
   name: 'LayoutEditor',

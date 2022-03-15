@@ -48,15 +48,14 @@
 </template>
 
 <script>
-import Icon from '../app/Icon';
 import _ from 'lodash';
 
+import { Icon, SlideButtons } from '@minis-core/components';
 import { translateMixin } from '@minis-core/mixins';
 
 import { Swiper, SwiperSlide } from 'swiper-vue2';
 import DisplayHistory from '../display/DisplayHistory';
 import DisplayEmpty from '../display/DisplayEmpty.vue';
-import SlideButtons from '../app/SlideButtons.vue';
 
 export default {
   name: 'LayoutHistory',
