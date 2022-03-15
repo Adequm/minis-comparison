@@ -44,7 +44,7 @@ import { Icon } from '@minis-core/components';
 import { translateMixin } from '@minis-core/mixins';
 
 export default {
-  name: 'Navigation',
+  name: 'AppNavigation',
 
   mixins: [translateMixin],
 

@@ -6,7 +6,7 @@
       gridTemplateRows
     }"
   >
-    <Navigation
+    <AppNavigation
       :isDesktop="isDesktop"
       :isModeEditor="isModeEditor"
       :isModeCompare="isModeCompare"
@@ -75,7 +75,7 @@ import _ from 'lodash';
 import LayoutEditor from './layouts/LayoutEditor';
 import LayoutCompare from './layouts/LayoutCompare';
 import LayoutHistory from './layouts/LayoutHistory';
-import Navigation from './app/Navigation';
+import AppNavigation from './app/AppNavigation';
 
 import { mapState, mapMutations } from 'vuex';
 
@@ -86,7 +86,7 @@ export default {
     LayoutEditor,
     LayoutCompare,
     LayoutHistory,
-    Navigation,
+    AppNavigation,
   },
 
   props: {
