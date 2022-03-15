@@ -51,7 +51,7 @@
 import Icon from '../app/Icon';
 import _ from 'lodash';
 
-import translateMixin from '../../mixins/translate.mixin';
+import { translateMixin } from '@minis-core/mixins';
 
 import { Swiper, SwiperSlide } from 'swiper-vue2';
 import DisplayHistory from '../display/DisplayHistory';
