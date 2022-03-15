@@ -5,8 +5,9 @@
       ref="textarea"
       style="margin-bottom: 10px;"
       :resize="appWidth"
-      :value="slideIndex ? valuePriority : valueQuestion"
+      :value="textareaValue"
       :placeholder="textareaPlaceholder"
+      :title="textareaValue && textareaPlaceholder"
       @input="inputTextarea"
       @submit="submitTextarea"
       @updateInputFocus="$emit('updateInputFocus', $event)"
@@ -143,6 +144,7 @@ export default {
         ? this.translate('editor.displays.priorities.placeholder') 
         : this.translate('editor.displays.questions.placeholder');
     },
+    textareaValue: ths => ths.slideIndex ? ths.valuePriority : ths.valueQuestion,
   },
 
   methods: {
