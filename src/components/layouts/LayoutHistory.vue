@@ -34,7 +34,7 @@
       <DisplayEmpty
         v-else
         :text="translate('history.displays.history.title')"
-        icon="inbox"
+        icon="book"
       />
     </div>
 

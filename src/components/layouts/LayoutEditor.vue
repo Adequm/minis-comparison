@@ -188,9 +188,13 @@ export default {
     },
 
     submitTextarea(value) {
-      this.slideIndex
-        ? this.$emit('addPriority', value)
-        : this.$emit('addQuestion', value);
+      if(this.slideIndex) {
+        this.$emit('updateValuePriority', '');
+        this.$emit('addPriority', value)
+      } else {
+        this.$emit('updateValueQuestion', '');
+        this.$emit('addQuestion', value)
+      }
     },
   },
 

@@ -112,6 +112,8 @@ export default {
       height: 100%;
       z-index: 4;
       transition: width .2s, height .2s;
+
+      span { text-align: center; }
       &:nth-child(1)::before {
         content: "VS";
         position: absolute;
