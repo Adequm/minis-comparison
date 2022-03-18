@@ -1,21 +1,38 @@
 <template>
   <div class="layout swiper-horizontal" id="layout-editor">
 
-    <AppTextarea
-      ref="textarea"
-      style="margin-bottom: 10px;"
-      :resize="appWidth"
-      :value="textareaValue"
-      :placeholder="textareaPlaceholder"
-      :title="textareaValue && textareaPlaceholder"
-      @input="inputTextarea"
-      @submit="submitTextarea"
-      @updateInputFocus="$emit('updateInputFocus', $event)"
-    />
+    <div class="layout__textarea_wrapper">
+      <AppTextarea
+        v-if="!slideIndex || isSlideHalf"
+        ref="textareaQuestions"
+        :resize="appWidth"
+        :value="valueQuestion"
+        :placeholder="textareaPlaceholderQuestions"
+        :title="valueQuestion && textareaPlaceholderQuestions"
+        @input="$emit('updateValueQuestion', $event)"
+        @submit="$emit('updateValueQuestion', '') && $emit('addQuestion', $event)"
+        @updateInputFocus="$emit('updateInputFocus', $event)"
+      />
+      <AppTextarea
+        v-if="slideIndex || isSlideHalf"
+        ref="textareaPriorities"
+        :resize="appWidth"
+        :value="valuePriority"
+        :placeholder="textareaPlaceholderPriorities"
+        :title="valuePriority && textareaPlaceholderPriorities"
+        @input="$emit('updateValuePriority', $event)"
+        @submit="$emit('updateValuePriority', '') && $emit('addPriority', $event)"
+        @updateInputFocus="$emit('updateInputFocus', $event)"
+      />
+    </div>
 
     <div class="layout__display" :class="{ isEnd, isBeginning }">
       <div class="layout__display_content">
-        <Swiper ref="swiper" @activeIndexChange="$emit('changeSlide', $event.realIndex)">
+        <Swiper 
+          ref="swiper" 
+          :slidesPerView="isSlideHalf ? 2 : 1"
+          @activeIndexChange="$emit('changeSlide', $event.realIndex)" 
+        >
           <SwiperSlide>
             <div class="slide__container" :style="{ height: `${ slideHeight }px` }">
               <DisplayQuestions
@@ -65,13 +82,12 @@
 <script>
 import { Swiper, SwiperSlide } from 'swiper-vue2';
 
+import { SlideButtons, AppTextarea } from '@minis-core/components';
 import { translateMixin } from '@minis-core/mixins';
 
 import DisplayPriorities from '../display/DisplayPriorities';
 import DisplayQuestions from '../display/DisplayQuestions';
 import DisplayEmpty from '../display/DisplayEmpty';
-
-import { SlideButtons, AppTextarea } from '@minis-core/components';
 
 export default {
   name: 'LayoutEditor',
@@ -111,7 +127,7 @@ export default {
     appHeight: ['setSlideWidth', 'setSlideHeight'],
     textareaHeight: ['setSlideWidth', 'setSlideHeight'],
     slideIndex(slideIndex) {
-      this.swiperRef.slideTo(slideIndex);
+      this.swiperRef.slideTo(this.isSlideHalf ? 0 : slideIndex);
       this.setSlideWidth();
     },
     bodyHeight: {
@@ -123,27 +139,25 @@ export default {
       handler() {
         this.questionsList = this.translate('editor.displays.questions.questionsList', []);
       }
-    }
+    },
   },
 
   computed: {
     isEnd() {
       const isEndSlide = this.slideIndex === this.slideList.length - 1;
-      return !!this.swiperRef && this.swiperRef.isEnd || isEndSlide;
+      return !!this.swiperRef && this.swiperRef.isEnd || isEndSlide || this.isSlideHalf;
     },
     isBeginning() {
       const isBeginningSlide = this.slideIndex === 0;
-      return !!this.swiperRef && this.swiperRef.isBeginning || isBeginningSlide;
+      return !!this.swiperRef && this.swiperRef.isBeginning || isBeginningSlide || this.isSlideHalf;
     },
     slideList() {
       return this.swiperRef?.slides || [];
     },
-    textareaPlaceholder() {
-      return this.slideIndex 
-        ? this.translate('editor.displays.priorities.placeholder') 
-        : this.translate('editor.displays.questions.placeholder');
-    },
-    textareaValue: ths => ths.slideIndex ? ths.valuePriority : ths.valueQuestion,
+    textareaPlaceholderPriorities: ths => ths.translate('editor.displays.priorities.placeholder'),
+    textareaPlaceholderQuestions: ths => ths.translate('editor.displays.questions.placeholder'),
+    isSlideHalf: ths => ths.appWidth >= 1000,
+    slideWidth: ths => ths.isSlideHalf ? (ths.appWidth - 40) / 2 : ths.appWidth - 40,
   },
 
   methods: {
@@ -154,12 +168,15 @@ export default {
     },
 
     setSlideWidth() {
-      const width = this.appWidth - 40;
+      const width = this.slideWidth;
       const slideTransform = `translate3d(-${ this.slideIndex * width }px, 0px, 0px)`;
 
       const swiperWrapper = document.querySelector('#layout-editor .swiper-wrapper');
       _.invoke(swiperWrapper?.style, 'setProperty', 'max-width', `${ width }px`);
       _.invoke(swiperWrapper?.style, 'setProperty', 'transform', slideTransform);
+      if(this.isSlideHalf) {
+        _.invoke(this.swiperRef, 'slideTo', 0);
+      }
 
       const swiperSlides = document.querySelectorAll('#layout-editor .swiper-slide');
       [].forEach.call(swiperSlides, (slide, slideIndex) => {
@@ -174,33 +191,20 @@ export default {
       if(type == 'priority') {
         this.$emit('updateValuePriority', this.priorities[index]);
         this.$emit('removePriority', index);
+        this.$refs.textareaPriorities.focus();
       } else {
         this.$emit('updateValueQuestion', this.questions[index]);
         this.$emit('removeQuestion', index);
-      }
-      this.$refs.textarea.focus();
-    },
-
-    inputTextarea(value) {
-      this.slideIndex
-        ? this.$emit('updateValuePriority', value)
-        : this.$emit('updateValueQuestion', value);
-    },
-
-    submitTextarea(value) {
-      if(this.slideIndex) {
-        this.$emit('updateValuePriority', '');
-        this.$emit('addPriority', value)
-      } else {
-        this.$emit('updateValueQuestion', '');
-        this.$emit('addQuestion', value)
+        this.$refs.textareaQuestions.focus();
       }
     },
   },
 
   mounted() {
+    const newSlideIndex = this.isSlideHalf ? 0 : this.slideIndex;
     this.swiperRef = this.$refs.swiper.swiperRef;
-    this.swiperRef.slideTo(this.slideIndex, 0);
+    this.swiperRef.slideTo(newSlideIndex, 0);
+    this.$emit('changeSlide', newSlideIndex);
     this.$nextTick(this.setSlideWidth);
   },
 };
@@ -215,6 +219,13 @@ export default {
   height: 100%;
   flex-direction: column;
   display: flex;
+
+  .layout__textarea_wrapper {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
 
   .layout__display {
     border-radius: 10px; 
