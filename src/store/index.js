@@ -12,6 +12,7 @@ Vue.use(Vuex);
 
 store.state = () => ({
   [fullscreenKey]: false,
+  switchFullscreenKey: `switch_${fullscreenKey}`,
   projectKey,
   savedHistory: [],
   questions: [],
@@ -25,7 +26,7 @@ store.getters = {
 
 
 store.mutations = {
-  switchFullscreen: state => Vue.set(state, fullscreenKey, !state[fullscreenKey]),
+  [`switch_${fullscreenKey}`]: state => Vue.set(state, fullscreenKey, !state[fullscreenKey]),
 
   addToHistory: ({ savedHistory }, data) => savedHistory.unshift(data),
   removeFromHistory: ({ savedHistory }, index) => savedHistory.splice(index, 1),
