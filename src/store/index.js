@@ -23,7 +23,7 @@ store.state = () => ({
 store.mutations = {
   [switchFullscreenKey]: state => Vue.set(state, 'isFullscreen', !state.isFullscreen),
 
-  addToHistory: ({ savedHistory }, data) => savedHistory.unshift(data),
+  addToCompareHistory: ({ savedHistory }, data) => savedHistory.unshift(data),
   removeFromHistory: ({ savedHistory }, index) => savedHistory.splice(index, 1),
 
   addQuestion: ({ questions }, question) => !questions.includes(question) && questions.push(question),

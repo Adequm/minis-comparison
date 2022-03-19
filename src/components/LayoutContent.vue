@@ -133,7 +133,7 @@ export default {
 
   methods: {
     ...mapMutations([
-      'addToHistory', 
+      'addToCompareHistory', 
       'removeFromHistory',
       'addQuestion',
       'removeQuestion',
@@ -146,7 +146,7 @@ export default {
     },
 
     finishComparison(priorities) {
-      this.addToHistory(priorities);
+      this.addToCompareHistory(priorities);
       this.isModeEditor = false;
       this.isModeCompare = false;
     },
