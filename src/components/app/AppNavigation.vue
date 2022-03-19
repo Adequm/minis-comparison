@@ -7,7 +7,7 @@
       @click="$emit('switchModeEditor')"
     />
     <div v-else class="navigation__item nohover" style="cursor: default;">
-      <span v-text="compareStep"/>
+      <span style="z-index: 1;" v-text="compareStep"/>
       <div class="compare_loader" :style="{ width: compareLoaderWidth }"/>
     </div>
 
@@ -143,8 +143,7 @@ export default {
       top: 0;
       max-width: 100%;
       border-radius: 10px;
-      background-color: var(--special-color);
-      opacity: .5;
+      background-color: var(--special-color-100);
       transition: width .5s;
     }
   }

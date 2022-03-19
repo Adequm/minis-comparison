@@ -62,7 +62,7 @@ export default {
   
         answers[+!answerIndex].style.setProperty('transition', `${ typeShift } .5s`);
         answers[+!answerIndex].style.setProperty(typeShift, '50px'); 
-        answers[answerIndex].style.setProperty('background-color', 'var(--special-color)');
+        answers[answerIndex].style.setProperty('background-color', 'var(--special-color-100)');
         answers[answerIndex].style.setProperty('color', 'var(--text-color)');
   
         setTimeout(() => {
