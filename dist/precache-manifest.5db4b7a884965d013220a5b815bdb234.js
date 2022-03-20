@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "21f95df37a4b8b813927",
+    "revision": "f1fc52c8b896758ff74c",
     "url": "/minis-comparison/css/app.befa46bc.css"
   },
   {
-    "revision": "db66757aa3f9ee50c9e7",
-    "url": "/minis-comparison/css/chunk-vendors.442b0846.css"
+    "revision": "9450036208982431809c",
+    "url": "/minis-comparison/css/chunk-vendors.07fba5b2.css"
   },
   {
     "revision": "706b86fa881ef644c6af4b9b66acdc98",
@@ -28,16 +28,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/minis-comparison/img/confetti.14a9dfc6.svg"
   },
   {
-    "revision": "9858b8b5bfcf8c2fbef17ec1b2f201c3",
+    "revision": "43519ee58bdc6ef77689c1806009bdbb",
     "url": "/minis-comparison/index.html"
   },
   {
-    "revision": "21f95df37a4b8b813927",
-    "url": "/minis-comparison/js/app.06f3336b.js"
+    "revision": "f1fc52c8b896758ff74c",
+    "url": "/minis-comparison/js/app.1e19d0c8.js"
   },
   {
-    "revision": "db66757aa3f9ee50c9e7",
-    "url": "/minis-comparison/js/chunk-vendors.d8292c13.js"
+    "revision": "9450036208982431809c",
+    "url": "/minis-comparison/js/chunk-vendors.93aed956.js"
   },
   {
     "revision": "084ce3929211398aaa4c15df580604ca",
