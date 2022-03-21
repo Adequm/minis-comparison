@@ -12,11 +12,14 @@
     </div>
 
     <button 
-      v-if="!isDesktop"
+      v-if="isShowSettingsButton"
+      id="settingsButton"
       class="navigation__item navigation__item-settings nofocus nohover"
+      :loading="isFrame && 'loading'"
       @click="$emit('openModal', 'settings')"
     >
-      <Icon type="settings"/>
+      <Icon class="settings__button-done" type="settings"/>
+      <Icon class="settings__button-loading" type="physics" rotate/>
     </button>
 
     <button 
@@ -53,7 +56,8 @@ export default {
   },
 
   props: {
-    isDesktop: Boolean,
+    isFrame: Boolean,
+    isShowSettingsButton: Boolean,
     isModeCompare: Boolean,
     isModeEditor: Boolean,
     isHistoryExist: Boolean,
@@ -62,10 +66,6 @@ export default {
     compareQuestionIndex: Number,
     compareMaxQuestionsIndex: Number,
   },
-
-  data: () => ({
-    console,
-  }),
 
   computed: {
     compareLoaderWidth: ths => `${ +(ths.compareQuestionIndex / ths.compareMaxQuestionsIndex * 100).toFixed(2) }%`,
@@ -119,6 +119,13 @@ export default {
       margin-left: auto;
       width: 100%;
       max-width: 50px;
+      &:not([loading="loading"]) {
+        .settings__button-loading { display: none }
+      }
+      &[loading="loading"] {
+        .settings__button-done { display: none }
+        pointer-events: none;
+      }
     }
 
     &:nth-last-child(1) {

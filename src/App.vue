@@ -1,117 +1,143 @@
 <template>
   <div 
     class="container" 
-    :class="{ fullscreen: isFullscreen }"
+    :class="{ 
+      fullscreen: isFullscreen || isFrame, 
+      fullscreenFrame: isFullscreenInFrame,
+    }"
     :style="{ 
       height: `${ innerHeight }px`, 
-      maxWidth: isDesktop ? `${ containerWidth }px` : '100vw',
       maxHeight: isDesktop ? `${ containerHeight }px` : '100vh',
     }"
   >
     <AppLoader v-if="!isPageLoad" :size="100" rotate/>
 
-    <div v-else class="minis__wrapper">
-      <SettingsDesktop
-        v-if="isDesktop"
-        :themeIcon="themeMain.icon"
-        :appHeight="appHeight"
-        :appWidth="appWidth"
-        :translate="translate"
-        :translateDef="translateDef"
-        :showHints="minisHints"
-        v-model="isClosedSettings"
-        @switchHints="switchHints"
-        @switchTheme="switchTheme"
-        @switchLang="switchLang"
-        @switchFullscreen="$store.commit(switchFullscreenKey)"
-      />
-
-      <LayoutContent
-        ref="layoutContent"
-        :appWidth="appWidth" 
-        :appHeight="appHeight"
-        :bodyHeight="innerHeight"
-        :isDesktop="isDesktop"
-        :isWidthMore768="isWidthMore768"
-        :style="{ filter: openedModalName ? 'blur(2px)' : 'none' }"
-        @switchSettings="isClosedSettings = !isClosedSettings"
-        @updateInputFocus="onInputFocus = $event"
-        @openModal="openedModalName = $event"
-        @setSlideIndexHistory="slideIndexHistory = $event"
-      />
-
-      <AppModal 
-        v-model="openedModalName" 
-        :isRoundedBorder="isWidthMore768 && !isFullscreen"
+    <div v-else class="frames__container">
+      <div 
+        v-for="(minis, minisIndex) of links"
+        :key="`${minis}_${minisIndex}`"
+        v-show="!isFullscreen || framePageIndex == minisIndex"
+        class="minis__wrapper"
+        :style="{ 
+          width: `${ appWidth }px`,
+          maxWidth: `${ isFullscreen ? appWidth : containerWidth }px`,
+        }"
       >
-        <SettingsMobile 
-          v-if="openedModalName == 'settings'"
+        <SettingsDesktop
+          v-if="!minisIndex && isDesktop && !isFrame"
           :themeIcon="themeMain.icon"
-          :isWidthMore768="isWidthMore768"
+          :appHeight="appHeight"
+          :appWidth="appWidth"
+          :translate="translate"
+          :translateDef="translateDef"
+          :showHints="minisHints"
+          v-model="isClosedSettings"
+          @switchHints="switchHints"
           @switchTheme="switchTheme"
           @switchLang="switchLang"
           @switchFullscreen="$store.commit(switchFullscreenKey)"
         />
-        <div v-if="openedModalName == 'deletionConfirmation'" class="confirmation">
-          <span v-text="translate('history.displays.history.buttonDeleteConfirm')"/>
-          <strong v-text="getFormatDate(lodash.get(savedHistory[slideIndexHistory], 'date'))"/>
-          <button v-text="translateDef('delete')" @click="removeFromHistoryHandler"/>
-        </div>
-      </AppModal>
 
-      <div 
-        v-if="isDesktop" 
-        class="resize_button" 
-        @mousedown.prevent="startResize"
-        @dblclick.prevent="autoResize"
-      />
-      <a 
-        v-if="isDesktop" 
-        href="https://adequm.github.io/minis" 
-        target="_blank" 
-        class="minis"
-        v-text="'Minis'"
-      />
+        <LayoutContent
+          v-if="minis == projectKey"
+          ref="layoutContent"
+          :appWidth="appWidth" 
+          :appHeight="appHeight"
+          :bodyHeight="innerHeight"
+          :isDesktop="isDesktop"
+          :isFrame="isFrame"
+          :isWidthMore768="isWidthMore768"
+          :isShowSettingsButton="isShowSettingsButton"
+          :style="{ filter: openedModalName ? 'blur(2px)' : 'none' }"
+          @switchSettings="isClosedSettings = !isClosedSettings"
+          @updateInputFocus="onInputFocus = $event"
+          @openModal="openModal"
+          @setSlideIndexHistory="slideIndexHistory = $event"
+        />
+
+        <LayoutFrame
+          v-else
+          ref="LayoutFrame"
+          :isResize="!!startResizeX"
+          :key="`${minisIndex}_${minis}_${isFullscreen}`"
+          :link="`${ domen + minis }?isFullscreen=${ isFullscreen }&index=${ minisIndex }`"
+          :style="{ filter: openedModalName ? 'blur(2px)' : 'none' }"
+          @load="initFrameSettingsWatcher(minisIndex)"
+        />
+
+        <AppModal
+          v-if="!isFullscreen || framePageIndex == minisIndex"
+          v-model="openedModalName"
+          :isRoundedBorder="isWidthMore768 && !isFullscreen"
+        >
+          <SettingsMobile 
+            v-if="openedModalName == 'settings'"
+            :themeIcon="themeMain.icon"
+            :title="translateChain(minis)('title')()"
+            :showArrows="links.length > 1"
+            :isWidthMore768="isWidthMore768"
+            @switchTheme="switchTheme"
+            @switchLang="switchLang"
+            @switchFullscreen="$store.commit(switchFullscreenKey)"
+            @clickToArrow="clickToArrow"
+          />
+          <div v-if="openedModalName == 'deletionConfirmation'" class="confirmation">
+            <span v-text="translate('history.displays.history.buttonDeleteConfirm')"/>
+            <strong v-text="getFormatDate(lodash.get(savedHistory[slideIndexHistory], 'date'))"/>
+            <button v-text="translateDef('delete')" @click="removeFromHistoryHandler"/>
+          </div>
+        </AppModal>
+
+        <div 
+          v-if="isDesktop" 
+          class="resize_button" 
+          @mousedown.prevent="startResize"
+          @dblclick.prevent="autoResize"
+        />
+        <a 
+          v-if="isShowMinisButton" 
+          href="https://adequm.github.io/minis" 
+          target="_blank" 
+          class="minis"
+          v-text="'Minis'"
+        />
+      </div>
     </div>
-
   </div>
 </template>
 
 <script>
 import _ from 'lodash';
 
-import { AppLoader, AppModal, SettingsDesktop, SettingsMobile } from '@minis-core/components';
-import { minisMixin, resizeMixin, faviconMixin, translateMixin } from '@minis-core/mixins';
+import { AppLoader, AppModal, SettingsDesktop, SettingsMobile, LayoutFrame } from '@minis-core/components';
+import { minisMixin, resizeMixin, faviconMixin, translateMixin, coreMixin, frameMixin } from '@minis-core/mixins';
 import LayoutContent from './components/LayoutContent';
 
 import { mapState } from 'vuex';
 
 export default {
   components: {
-    LayoutContent,
     AppModal,
+    AppLoader,
     SettingsDesktop,
     SettingsMobile,
-    AppLoader,
+    LayoutContent,
+    LayoutFrame,
   },
 
-  mixins: [minisMixin, resizeMixin, faviconMixin, translateMixin],
+  mixins: [
+    minisMixin, 
+    resizeMixin, 
+    faviconMixin, 
+    translateMixin,
+    coreMixin,
+    frameMixin,
+  ],
 
   data: () => ({
     lodash: _,
-    isClosedSettings: true,
-    openedModalName: null,
     slideIndexHistory: 0,
   }),
-
-  watch: {
-    isDesktop(isDesktop) {
-      if(isDesktop && this.openedModalName == 'settings') {
-        this.openedModalName = null;
-        this.isClosedSettings = false;
-      }
-    },
-  },
 
   computed: {
     ...mapState([
@@ -136,15 +162,6 @@ export default {
       this.$refs.layoutContent.removeFromHistoryHandler(this.slideIndexHistory);
       this.openedModalName = null;
     },
-  },
-
-  beforeMount() {
-    document.body.addEventListener('click', event => {
-      if(document.body !== event.target) return;
-      if(!this.isDesktop) return;
-      if(this.isClosedSettings) return;
-      this.isClosedSettings = true;
-    });
   },
 };
 </script>
@@ -186,75 +203,81 @@ body {
     width: 100vw;
     margin: 0 auto;
 
-    .minis__wrapper {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      box-shadow: 0 3px 0 2px var(--main-bg-color);
-      border-radius: 10px;
-      box-sizing: border-box;
+    .frames__container {
+      height: 100%; 
+      display: flex; 
+      justify-content: center; 
+      gap: 20px; 
+      flex-direction: row-reverse;
+      .minis__wrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        box-shadow: 0 3px 0 2px var(--main-bg-color);
+        border-radius: 10px;
+        box-sizing: border-box;
 
-      .confirmation {
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        font-size: 18px;
-        strong {
-          color: var(--special-color);
-        }
-        button {
-          margin-top: 10px;
-          border-radius: 10px;
-          padding: 10px;
-          background: var(--special-color);
-          cursor: pointer;
-          &:hover {
-            opacity: .8;
+        .confirmation {
+          display: flex;
+          flex-direction: column;
+          text-align: center;
+          font-size: 18px;
+          strong {
+            color: var(--special-color);
+          }
+          button {
+            margin-top: 10px;
+            border-radius: 10px;
+            padding: 10px;
+            background: var(--special-color);
+            cursor: pointer;
+            &:hover {
+              opacity: .8;
+            }
           }
         }
-      }
 
-      .minis {
-        display: flex;
-        position: absolute;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-        color: var(--special-color);
-        opacity: .5;
-        cursor: pointer;
-        transition: opacity .2s;
-        text-decoration: none;
-        border: none;
-        outline: none;
-        width: 50px;
-        height: 30px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-        z-index: 5;
-        user-select: none; 
-        &:hover { opacity: 1; }
-        &:focus { color: var(--text-color); }
-      }
+        .minis {
+          display: flex;
+          position: absolute;
+          justify-content: center;
+          align-items: center;
+          font-weight: bold;
+          color: var(--special-color);
+          opacity: .5;
+          cursor: pointer;
+          transition: opacity .2s;
+          text-decoration: none;
+          border: none;
+          outline: none;
+          width: 50px;
+          height: 30px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+          z-index: 5;
+          user-select: none; 
+          &:hover { opacity: 1; }
+          &:focus { color: var(--text-color); }
+        }
 
-      .resize_button {
-        position: absolute;
-        display: block;
-        width: 10px;
-        height: 10px;
-        background: var(--special-color);
-        transform: translateY(-100%);
-        right: 0;
-        top: 100%;
-        z-index: 101;
-        clip-path: polygon(100% 0, 100% 100%, 0 100%);
-        border-radius: 0 0 10px 0;
-        cursor: se-resize;
+        .resize_button {
+          position: absolute;
+          display: block;
+          width: 10px;
+          height: 10px;
+          background: var(--special-color);
+          transform: translateY(-100%);
+          right: 0;
+          top: 100%;
+          z-index: 101;
+          clip-path: polygon(100% 0, 100% 100%, 0 100%);
+          border-radius: 0 0 10px 0;
+          cursor: se-resize;
+        }
       }
     }
-
   }
 }
 

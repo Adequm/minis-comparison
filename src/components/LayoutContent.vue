@@ -7,14 +7,15 @@
     }"
   >
     <AppNavigation
-      :isDesktop="isDesktop"
+      :isFrame="isFrame"
       :isModeEditor="isModeEditor"
       :isModeCompare="isModeCompare"
+      :isShowSettingsButton="isShowSettingsButton"
       :isHistoryExist="!!lodash.size(savedHistory)"
-      :isEditorDataExist="!!questions.length && priorities.length >= 2"
+      :isEditorDataExist="!!lodash.size(questions) && lodash.size(priorities) >= 2"
       :isHistoryModeAnswers="isHistoryModeAnswers"
       :compareQuestionIndex="compareQuestionIndex"
-      :compareMaxQuestionsIndex="questions.length"
+      :compareMaxQuestionsIndex="lodash.size(questions)"
       @switchModeCompare="isModeCompare = !isModeCompare"
       @switchModeEditor="isModeEditor = !isModeEditor"
       @openModal="$emit('openModal', $event)"
@@ -95,6 +96,8 @@ export default {
     bodyHeight: Number,
     isDesktop: Boolean,
     isWidthMore768: Boolean,
+    isShowSettingsButton: Boolean,
+    isFrame: Boolean,
   },
 
   data: () => ({
@@ -223,9 +226,9 @@ export default {
       0 5px, 5px 0, calc(100% - 5px) 0, 101% 5px, 
       101% calc(100% - 5px), calc(100% - 5px) 101%, 5px 101%, 0 calc(100% - 5px)
     );
-    .minis__display {
-      padding-bottom: 30px;
-    }
+  }
+  .container:not(.fullscreen):not(.fullscreenFrame) .minis__content .minis__display {
+    padding-bottom: 30px;
   }
 }
 </style>
