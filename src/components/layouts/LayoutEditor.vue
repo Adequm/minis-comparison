@@ -109,8 +109,14 @@ export default {
     appWidth: Number,
     appHeight: Number,
     bodyHeight: Number,
-    questions: Array,
-    priorities: Array,
+    questions: {
+      type: Array,
+      default: () => [],
+    },
+    priorities: {
+      type: Array,
+      default: () => [],
+    },
     valueQuestion: String,
     valuePriority: String,
     slideIndex: Number,

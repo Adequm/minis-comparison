@@ -74,7 +74,10 @@ export default {
   props: {
     appWidth: Number,
     bodyHeight: Number,
-    savedHistory: Array,
+    savedHistory: {
+      type: Array,
+      default: () => [],
+    },
     isHistoryModeAnswers: Boolean,
   },
 
