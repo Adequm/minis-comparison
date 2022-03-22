@@ -166,7 +166,9 @@ export default {
     },
 
     removeFromHistoryHandler() {
-      this.$refs.layoutContent.removeFromHistoryHandler(this.slideIndexHistory);
+      _.each(this.$refs.layoutContent, layout => {
+        layout.removeFromHistoryHandler(this.slideIndexHistory);
+      })
       this.openedModalName = null;
     },
   },
