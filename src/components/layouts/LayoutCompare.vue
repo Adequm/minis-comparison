@@ -1,7 +1,7 @@
 <template>
   <div 
     class="layout" 
-    id="layout-compare"
+    :id="`layout-compare_${appIndex}_${appIndexLocal}`"
     :class="`swiper-${ direction }`"
   >
 
@@ -56,6 +56,8 @@ export default {
       type: Array,
       default: () => [],
     },
+    appIndex: [Number, String],
+    appIndexLocal: [Number, String],
   },
 
   data: () => ({
@@ -117,15 +119,16 @@ export default {
     setSlidesSize() {
       this.swiperRef.slideTo(0, 0);
 
+      const layoutId = `#layout-compare_${this.appIndex}_${this.appIndexLocal}`;
       const width = this.appWidth - 60;
       const height = this.slideHeight;
 
-      const swiperWrapper = document.querySelector('#layout-compare .swiper-wrapper');
+      const swiperWrapper = document.querySelector(`${layoutId} .swiper-wrapper`);
       _.invoke(swiperWrapper?.style, 'setProperty', 'max-width', `${ width }px`);
       _.invoke(swiperWrapper?.style, 'setProperty', 'max-height', `${ height }px`);
       _.invoke(swiperWrapper?.style, 'setProperty', 'transform', this.slideTransform);
 
-      const swiperSlides = document.querySelectorAll('#layout-compare .swiper-slide');
+      const swiperSlides = document.querySelectorAll(`${layoutId} .swiper-slide`);
       [].forEach.call(swiperSlides, (slide, slideIndex) => {
         slide.style.setProperty('width', `${ width }px`);
         slide.style.setProperty('height', `${ height }px`);

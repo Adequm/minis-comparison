@@ -28,6 +28,8 @@
         :horizontal="isWidthMore768 && appWidth >= 530"
         :appWidth="appWidth"
         :appHeight="appHeight"
+        :appIndex="appIndex"
+        :appIndexLocal="appIndexLocal"
         :bodyHeight="bodyHeight"
         :questions="questions"
         :priorities="priorities"
@@ -39,6 +41,8 @@
           v-if="isModeEditor"
           :appWidth="appWidth"
           :appHeight="appHeight"
+          :appIndex="appIndex"
+          :appIndexLocal="appIndexLocal"
           :bodyHeight="bodyHeight"
           :questions="questions"
           :priorities="priorities"
@@ -56,8 +60,10 @@
         />
         <LayoutHistory
           v-if="!isModeEditor"
-          ref="layoutHistory"
+          :ref="`layoutHistory_${appIndex}_${appIndexLocal}`"
           :appWidth="appWidth"
+          :appIndex="appIndex"
+          :appIndexLocal="appIndexLocal"
           :bodyHeight="bodyHeight"
           :savedHistory="savedHistory"
           :isHistoryModeAnswers="isHistoryModeAnswers"
@@ -91,6 +97,8 @@ export default {
   },
 
   props: {
+    appIndex: [Number, String],
+    appIndexLocal: [Number, String],
     appWidth: Number,
     appHeight: Number,
     bodyHeight: Number,
@@ -144,8 +152,9 @@ export default {
       'removePriority'
     ]),
     removeFromHistoryHandler() {
+      const layoutHistory = this.$refs[`layoutHistory_${this.appIndex}_${this.appIndexLocal}`];
       this.removeFromHistory(this.slideIndexHistory);
-      this.$refs.layoutHistory.deleteSlide(this.slideIndexHistory);
+      _.invoke(layoutHistory, 'deleteSlide', this.slideIndexHistory);
     },
 
     finishComparison(priorities) {

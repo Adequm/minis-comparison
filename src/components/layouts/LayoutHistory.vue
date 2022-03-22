@@ -1,6 +1,6 @@
 <template>
   <div 
-    id="layout-history"
+    :id="`layout-history_${appIndex}_${appIndexLocal}`"
     class="layout swiper-horizontal" 
     :class="{ isEnd, isBeginning }" 
   >
@@ -79,6 +79,8 @@ export default {
       default: () => [],
     },
     isHistoryModeAnswers: Boolean,
+    appIndex: [Number, String],
+    appIndexLocal: [Number, String],
   },
 
   data: () => ({
@@ -133,13 +135,14 @@ export default {
 
     setSlidesSize() {
       const width = this.appWidth - 40;
+      const layoutId = `#layout-history_${this.appIndex}_${this.appIndexLocal}`;
       const slideTransform = `translate3d(-${ this.slideIndex * width }px, 0px, 0px)`;
 
-      const swiperWrapper = document.querySelector('#layout-history .swiper-wrapper');
+      const swiperWrapper = document.querySelector(`${layoutId} .swiper-wrapper`);
       _.invoke(swiperWrapper?.style, 'setProperty', 'max-width', `${ width }px`);
       _.invoke(swiperWrapper?.style, 'setProperty', 'transform', slideTransform);
 
-      const swiperSlides = document.querySelectorAll('#layout-history .swiper-slide');
+      const swiperSlides = document.querySelectorAll(`${layoutId} .swiper-slide`);
       [].forEach.call(swiperSlides, (slide, slideIndex) => {
         slide.style.setProperty('width', `${ width }px`);
         this.swiperRef.slidesGrid[slideIndex] = slideIndex * width;

@@ -47,6 +47,8 @@
         <LayoutContent
           v-if="minis == projectKey"
           ref="layoutContent"
+          :appIndex="appIndex"
+          :appIndexLocal="minisIndex"
           :appWidth="appWidth" 
           :appHeight="appHeight"
           :bodyHeight="innerHeight"

@@ -1,5 +1,5 @@
 <template>
-  <div class="layout swiper-horizontal" id="layout-editor">
+  <div class="layout swiper-horizontal" :id="`layout-editor_${appIndex}_${appIndexLocal}`">
 
     <div class="layout__textarea_wrapper">
       <AppTextarea
@@ -120,6 +120,8 @@ export default {
     valueQuestion: String,
     valuePriority: String,
     slideIndex: Number,
+    appIndex: [Number, String],
+    appIndexLocal: [Number, String],
   },
 
   data: () => ({
@@ -175,16 +177,17 @@ export default {
 
     setSlideWidth() {
       const width = this.slideWidth;
+      const layoutId = `#layout-editor_${this.appIndex}_${this.appIndexLocal}`;
       const slideTransform = `translate3d(-${ this.slideIndex * width }px, 0px, 0px)`;
 
-      const swiperWrapper = document.querySelector('#layout-editor .swiper-wrapper');
+      const swiperWrapper = document.querySelector(`${layoutId} .swiper-wrapper`);
       _.invoke(swiperWrapper?.style, 'setProperty', 'max-width', `${ width }px`);
       _.invoke(swiperWrapper?.style, 'setProperty', 'transform', slideTransform);
       if(this.isSlideHalf) {
         _.invoke(this.swiperRef, 'slideTo', 0);
       }
 
-      const swiperSlides = document.querySelectorAll('#layout-editor .swiper-slide');
+      const swiperSlides = document.querySelectorAll(`${layoutId} .swiper-slide`);
       [].forEach.call(swiperSlides, (slide, slideIndex) => {
         slide.style.setProperty('width', `${ width }px`);
         this.swiperRef.slidesGrid[slideIndex] = slideIndex * width;
