@@ -66,7 +66,6 @@
         <LayoutFrame
           v-else
           :isResize="!!startResizeX"
-          :key="`${minisIndex}_${minis}`"
           :link="`${ domen + minis }?index=${ minisIndex }`"
           :style="{ filter: openedModalName ? 'blur(2px)' : 'none' }"
           @load="initFrameSettingsWatcher(minisIndex)"
