@@ -25,8 +25,8 @@
     <button 
       v-if="isModeEditor"
       class="navigation__item navigation__item-special"
-      :disabled="!isEditorDataExist"
-      @click="isEditorDataExist && $emit('switchModeCompare')"
+      :disabled="!isEditorDataExist && !isModeCompare"
+      @click="(isEditorDataExist || isModeCompare) && $emit('switchModeCompare')"
     >
       <Icon :type="isModeCompare ? 'cross-small' : 'paper-plane'"/>
     </button>
