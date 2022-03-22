@@ -209,6 +209,8 @@ export default {
   position: relative;
   top: 0;
   z-index: 1;
+  width: inherit;
+  max-width: inherit;
 
   .minis__display {
     padding: 20px;
@@ -216,6 +218,9 @@ export default {
     z-index: 2;
     background-color: var(--content-bg-color);
     border-radius: 10px;
+    width: inherit;
+    max-width: inherit;
+    box-sizing: border-box;
   }
 }
 
