@@ -163,28 +163,25 @@ export default {
       this.isModeCompare = false;
     },
 
-    keydown({ key, shiftKey }) {
-      switch(key) {
-        case 'Escape':
-          this.$emit('switchSettings');
-          break;
+    // keydown({ key, shiftKey }) {
+      // switch(key) {
         // case 'ArrowLeft':
         //   this.swiperPage = 0;
         //   break;
         // case 'ArrowRight':
         //   this.swiperPage = 1;
         //   break;
-      }
-    },
+    //   }
+    // },
   },
 
-  beforeMount() {
-    document.addEventListener('keydown', this.keydown);
-  },
+  // beforeMount() {
+  //   document.addEventListener('keydown', this.keydown);
+  // },
 
-  beforeDestroy() {
-    document.removeEventListener('keydown', this.keydown);
-  },
+  // beforeDestroy() {
+  //   document.removeEventListener('keydown', this.keydown);
+  // },
 };
 </script>
 
